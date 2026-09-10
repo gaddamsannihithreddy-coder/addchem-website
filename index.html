@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Addchem Enterprises | Chemical Supplier in India</title>
+<meta name="description" content="Addchem Enterprises, Hyderabad — Pan-India chemical supplier. Search products by product name or CAS number and send an enquiry.">
+<link rel="canonical" href="https://addchem.in/">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header><div class="wrap nav">
+<a class="brand" href="/"><img src="/assets/logo.png" alt="Addchem Enterprises logo"><span>ADDCHEM<small>ADD CHEMISTRY TO..</small></span></a>
+<nav><a href="/">Home</a><a href="#products">Products</a><a href="#about">About</a><a href="#contact">Contact</a><a class="btn btn-red" href="tel:+918919580575">Enquire</a></nav>
+</div></header>
+
+<main>
+<section class="hero" id="home"><div class="wrap hero-grid">
+<div><div class="kicker">Hyderabad · Pan India</div><h1>Adding <span style="color:var(--red)">chemistry</span> to your supply chain.</h1>
+<p>Addchem Enterprises supplies chemicals and laboratory products across India. Search our catalog by <strong>product name or CAS number</strong> and contact us for availability and quotations.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:25px"><a class="btn btn-red" href="#products">Search Products</a><a class="btn btn-light" href="tel:+918919580575">Call 8919580575</a></div></div>
+<div class="hero-card"><img src="/assets/logo.png" alt="Addchem logo"><p style="text-align:center;margin:10px 0 0"><strong>Reliable chemical sourcing</strong><br><span class="muted">Serving customers across India</span></p></div>
+</div></section>
+
+<section id="products"><div class="wrap">
+<div class="section-head"><div><div class="kicker">Catalog</div><h2>Find a <strong>product</strong></h2></div><p>Search by chemical name, CAS number, or catalog wording. Each indexed product has its own page.</p></div>
+<div class="searchbar"><input id="q" type="search" placeholder="e.g. Acetonitrile or 75-05-8" autocomplete="off"></div>
+<div class="count" id="count">Loading catalog…</div><div class="product-grid" id="results"></div>
+</div></section>
+
+<section id="about" class="band"><div class="wrap"><div class="section-head"><div><div class="kicker" style="color:#ff4b4b">About</div><h2>Built for <strong>chemical enquiries</strong></h2></div></div>
+<p style="max-width:800px">Addchem Enterprises is based in Hyderabad and serves customers across India. Our website is designed to make chemical sourcing easier by letting customers search products using the names and CAS numbers in the supplied catalog.</p>
+</div></section>
+
+<section id="contact"><div class="wrap"><div class="contact-grid">
+<div><div class="kicker">Contact</div><h2>Tell us what you <strong>need</strong>.</h2><p class="muted">Send the product name, CAS number, grade and quantity when available. We can respond with availability and quotation details.</p></div>
+<div class="contact-box"><div class="muted">Phone</div><div class="phone"><a href="tel:+918919580575">8919580575</a></div><p class="muted">Hyderabad, Telangana · Pan-India service</p><a class="btn btn-red" href="tel:+918919580575">Call Addchem</a></div>
+</div></div></section>
+</main>
+<footer><div class="wrap footer-row"><div><strong>ADDCHEM</strong><br>Adding chemistry to..</div><div>© 2026 Addchem Enterprises · Hyderabad, India</div></div></footer>
+<script>
+const dataUrl='/products.json';
+const results=document.getElementById('results'), q=document.getElementById('q'), count=document.getElementById('count');
+let products=[];
+function render(list){
+ count.textContent=`${list.length.toLocaleString()} products shown`;
+ results.innerHTML=list.slice(0,120).map(p=>`<a class="product" href="/products/${p.slug}/"><h3>${escapeHtml(p.name)}</h3><span class="cas">CAS ${p.cas}</span>${p.details?`<p>${escapeHtml(p.details)}</p>`:''}</a>`).join('');
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+fetch(dataUrl).then(r=>r.json()).then(d=>{products=d;render(products.slice(0,60));q.addEventListener('input',()=>{const x=q.value.trim().toLowerCase();if(!x)return render(products.slice(0,60));render(products.filter(p=>(p.name+' '+p.cas+' '+(p.details||'')).toLowerCase().includes(x)));});}).catch(()=>count.textContent='Catalog could not be loaded.');
+</script>
+</body></html>
