@@ -1,0 +1,16 @@
+The old repository files have been replaced with the newer ADDCHEM website files.
+
+Updated:
+- index.html
+- styles.css
+- catalogue.html
+- catalogue.js
+- contact.html
+- data/products.json
+- data/catalogue.csv
+- data/summary.json
+
+Preserved:
+- the original assets/logo.png from the uploaded older repository
+
+The assets/images folder is included for the real website photographs referenced by the new homepage.
