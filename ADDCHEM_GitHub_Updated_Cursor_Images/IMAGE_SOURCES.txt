@@ -1,0 +1,31 @@
+REAL IMAGE SOURCES USED BY THE HOMEPAGE
+
+Industrial storage tanks
+https://commons.wikimedia.org/wiki/File:Industrial_storage_tanks.jpg
+License: CC BY-SA / GFDL as stated by Wikimedia Commons; author Cjp24.
+
+Petrochemical plant - Norway
+https://commons.wikimedia.org/wiki/File:Petrochemical_plant_-_Norway.jpg
+License: CC BY-SA 3.0; author Bitjungle.
+
+Chemical Processing Equipment at a Poly-Silicon Plant
+https://commons.wikimedia.org/wiki/File:Chemical_Processing_Equipment_at_a_Poly-Silicon_Plant.JPG
+License: CC BY-SA 3.0; original uploader LeoCRogers.
+
+INdustrial piping
+https://commons.wikimedia.org/wiki/File:INdustrial_piping.jpg
+License: CC BY-SA 3.0; author Bitjungle.
+
+Laboratory chemicals
+https://commons.wikimedia.org/wiki/File:Laboratory_chemicals.jpg
+License: CC BY-SA 3.0; author 564dude.
+
+Chemical Plant Western Reclamation
+https://commons.wikimedia.org/wiki/File:Chemical_Plant_Western_Reclamation.jpg
+License: Public domain; author Ingolfson.
+
+Clownfish in blue water
+https://commons.wikimedia.org/wiki/File:Clownfish_in_blue_water.jpg
+License: CC BY-SA 3.0; author Daniel Seibert (TheDS).
+
+These are loaded from Wikimedia Commons so the GitHub repository does not need binary image files.

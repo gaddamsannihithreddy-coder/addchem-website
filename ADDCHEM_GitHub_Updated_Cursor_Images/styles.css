@@ -205,3 +205,122 @@ to{transform:translateY(4px) scale(1.03)}}
 }
 @keyframes scanLine{0%{transform:translateX(-15%) rotate(-4deg);opacity:0}15%{opacity:.6}50%{transform:translateX(12%) rotate(-4deg);opacity:.85}100%{transform:translateX(25%) rotate(-4deg);opacity:0}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
+
+
+/* ===== Cursor-reactive background and reliable remote photo cards ===== */
+.legacy-hero{isolation:isolate}
+.hero-slideshow{z-index:0}
+.hero-overlay{z-index:2}
+.legacy-hero-content{z-index:4}
+.image-card{
+  background-color:#0c1116 !important;
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.82)),
+    var(--card-photo) !important;
+  background-size:cover !important;
+  background-position:center !important;
+  border:1px solid rgba(255,255,255,.04);
+}
+.image-card .card-image-shade{background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.76))}
+.image-card:hover{border-color:rgba(237,28,36,.4);box-shadow:0 25px 65px rgba(10,14,20,.22)}
+.img-load-error{opacity:0 !important}
+.particle-layer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:50;
+  overflow:hidden;
+  --cursor-x:50vw;
+  --cursor-y:50vh;
+}
+.particle-layer:before{
+  content:"";
+  position:absolute;
+  width:380px;
+  height:380px;
+  left:calc(var(--cursor-x) - 190px);
+  top:calc(var(--cursor-y) - 190px);
+  border-radius:50%;
+  background:
+    radial-gradient(circle,
+      rgba(255,38,48,.18) 0%,
+      rgba(255,38,48,.08) 22%,
+      rgba(255,38,48,.025) 44%,
+      transparent 72%);
+  filter:blur(2px);
+  transition:left .08s linear,top .08s linear;
+}
+.particle-layer:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(115deg,transparent 0 48%,rgba(237,28,36,.025) 49%,transparent 50% 100%),
+    radial-gradient(circle at var(--cursor-x) var(--cursor-y),rgba(255,255,255,.07),transparent 180px);
+  opacity:.75;
+  mix-blend-mode:screen;
+}
+.particle-layer i{
+  position:absolute;
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(255,55,62,.7);
+  box-shadow:0 0 18px rgba(255,42,49,.5);
+  transform:translate3d(var(--cursor-shift-x,0),var(--cursor-shift-y,0),0);
+  transition:transform .18s ease-out;
+}
+.particle-layer i:before,
+.particle-layer i:after{
+  content:"";
+  position:absolute;
+  left:50%;top:50%;
+  width:80px;height:1px;
+  background:linear-gradient(90deg,rgba(255,45,52,.22),transparent);
+  transform-origin:left center;
+  opacity:.55;
+}
+.particle-layer i:before{transform:rotate(28deg)}
+.particle-layer i:after{transform:rotate(-28deg)}
+/* Cursor-following card photo depth */
+.image-card:after{
+  content:"";
+  position:absolute;
+  inset:-20%;
+  z-index:2;
+  background:
+    radial-gradient(circle at calc(50% + var(--mx,0px)) calc(50% + var(--my,0px)),rgba(255,255,255,.16),transparent 28%),
+    linear-gradient(110deg,transparent 30%,rgba(255,255,255,.10) 48%,transparent 66%);
+  transform:translateX(-100%);
+  transition:transform .6s ease;
+  pointer-events:none;
+}
+.image-card:hover:after{transform:translateX(8%)}
+.aqua-card{background-image:linear-gradient(180deg,rgba(0,45,70,.1),rgba(0,15,25,.75)),var(--card-photo)!important}
+.aqua-fish-layer{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none}
+.aqua-fish-photo{
+  position:absolute;
+  display:block;
+  width:92px;
+  height:54px;
+  border-radius:50%;
+  background-image:url("https://upload.wikimedia.org/wikipedia/commons/f/f6/Clownfish_in_blue_water.jpg");
+  background-size:cover;
+  background-position:center;
+  box-shadow:0 5px 16px rgba(0,0,0,.24);
+  mix-blend-mode:screen;
+}
+.aqua-fish-photo.fish-a{left:-110px;top:24%;animation:fishCruiseA 8.5s linear infinite}
+.aqua-fish-photo.fish-b{left:-120px;top:58%;width:72px;height:46px;opacity:.75;animation:fishCruiseB 12s linear infinite 1.7s}
+@keyframes fishCruiseA{
+  0%{transform:translateX(0) translateY(0) scale(.72)}
+  45%{transform:translateX(180px) translateY(-10px) scale(.95)}
+  100%{transform:translateX(430px) translateY(6px) scale(.78)}
+}
+@keyframes fishCruiseB{
+  0%{transform:translateX(0) translateY(0) scale(.62)}
+  40%{transform:translateX(150px) translateY(9px) scale(.76)}
+  100%{transform:translateX(430px) translateY(-4px) scale(.64)}
+}
+@media(prefers-reduced-motion:reduce){
+  .particle-layer:before,.particle-layer:after{display:none}
+  .particle-layer i,.aqua-fish-photo,.hero-slide img{animation:none!important;transition:none!important}
+}
