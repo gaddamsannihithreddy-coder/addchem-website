@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ADDCHEM complete chemical product catalogue">
+<title>ADDCHEM | Product Catalogue</title>
+<link rel="icon" href="assets/logo.png"><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html"><img src="assets/logo.png" alt="ADDCHEM"></a>
+  <button class="nav-toggle" aria-label="Open menu">☰</button>
+  <nav class="nav"><a href="index.html">Home</a><a href="catalogue.html" class="active">Catalogue</a><a href="index.html#about">About</a><a href="contact.html">Contact</a></nav>
+</header>
+
+<main class="catalogue-main">
+  <section class="catalogue-head">
+    <div>
+      <span class="eyebrow">PRODUCT CATALOGUE</span>
+      <h1>Find the right product fast.</h1>
+      <p>All catalogue records below are sourced from the supplied Excel dataset. Prices are intentionally excluded; HSN and GST are retained.</p>
+    </div>
+    <a class="btn btn-ghost" href="data/catalogue.csv" download>Download CSV</a>
+  </section>
+
+  <section class="filters">
+    <label class="search-wrap"><span>Search</span><input id="search" type="search" placeholder="Product, CAS, product code, HSN…"></label>
+    <label><span>Section</span><select id="section"><option value="">All sections</option></select></label>
+    <label><span>Grade</span><select id="grade"><option value="">All grades</option></select></label>
+    <button id="reset" class="btn btn-soft">Reset</button>
+  </section>
+
+  <div class="results-row"><span id="result-count">Loading…</span><span>Sorted A–Z by product name</span></div>
+  <div id="catalogue" class="product-grid"></div>
+  <div id="empty" class="empty" hidden>No products match your search.</div>
+  <div class="pager"><button id="prev" class="btn btn-soft">← Previous</button><span id="page-info"></span><button id="next" class="btn btn-soft">Next →</button></div>
+</main>
+
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" data-close aria-label="Close">×</button>
+    <span class="eyebrow">PRODUCT DETAILS</span>
+    <h2 id="modal-title">—</h2>
+    <div id="modal-body" class="detail-grid"></div>
+  </div>
+</div>
+
+<footer class="footer"><div><strong>ADDCHEM</strong><span>ADD CHEMISTRY TO...</span></div><div>Adikmet Main Road, Vidya Nagar, Adikmet, Hyderabad, Telangana 500044</div><div><a href="contact.html">Contact & map</a></div></footer>
+<script src="catalogue.js"></script>
+<script>document.querySelector(".nav-toggle")?.addEventListener("click",()=>document.querySelector(".nav")?.classList.toggle("open"));</script></body>
+</html>
