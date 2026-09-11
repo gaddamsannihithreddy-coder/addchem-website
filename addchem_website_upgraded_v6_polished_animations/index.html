@@ -40,7 +40,7 @@
   <section id="about" class="legacy-section">
     <div class="legacy-title"><span>ABOUT ADDCHEM</span><h2>Reliable products. Practical information.</h2></div>
     <div class="legacy-columns">
-      <div><p>Use our catalogue to locate products quickly by product name, CAS number, product code, grade, pack size or HSN code.</p><p>The catalogue is maintained from the supplied Advent PL-07 dataset, with pricing intentionally omitted from the public catalogue.</p></div>
+      <div><p>Use our catalogue to locate products quickly by product name, CAS number, product code, grade, pack size or HSN code.</p></div>
       <div class="legacy-facts"><div><b>Fast Search</b><span>Product, CAS, code & HSN</span></div><div><b>Structured Data</b><span>Grade, pack & GST details</span></div><div><b>Direct Enquiry</b><span>WhatsApp from each product</span></div></div>
     </div>
   </section>
@@ -58,32 +58,7 @@
     </div>
     <div class="legacy-title"><span>PRODUCT RANGE</span><h2>Browse the catalogue by section</h2></div>
     <div id="section-cards" class="legacy-cards"></div>
-    <div class="aqua-spotlight">
-      <div class="aqua-water"></div>
-      <div class="aqua-copy">
-        <span>AQUA PRODUCTS</span>
-        <h3>Water-focused chemistry, with a living interface.</h3>
-        <p>Explore Aqua Products for water analysis, testing and related applications.</p>
-        <a class="btn btn-light aqua-cta" href="catalogue.html?section=Aqua%20Products">Explore Aqua Products →</a>
-      </div>
-      <div class="aqua-scene" aria-hidden="true">
-        <span class="bubble bubble-a"></span><span class="bubble bubble-b"></span><span class="bubble bubble-c"></span><span class="bubble bubble-d"></span>
-        <img class="scene-fish scene-fish-a" src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Orange_clown_fish_2.jpg" alt="">
-        <img class="scene-fish scene-fish-b" src="https://upload.wikimedia.org/wikipedia/commons/8/83/Yellow_fish_in_the_aquarium.JPG" alt="">
-        <img class="scene-fish scene-fish-c" src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Orange_clown_fish_2.jpg" alt="">
-      </div>
-    </div>
     <div class="center"><a class="btn btn-primary" href="catalogue.html">View Full Catalogue</a></div>
-  </section>
-
-  <section class="legacy-section chemistry-showcase">
-    <div class="legacy-title"><span>CHEMISTRY IN FOCUS</span><h2>Laboratory-first, information-rich.</h2></div>
-    <div class="image-strip real-photo-grid">
-      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Industrial_storage_tanks.jpg" alt="Real chemical storage tanks"><figcaption>Chemical storage</figcaption></figure>
-      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Petrochemical_plant_-_Norway.jpg" alt="Real petrochemical plant"><figcaption>Process plant</figcaption></figure>
-      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/INdustrial_piping.jpg" alt="Real industrial piping"><figcaption>Industrial piping</figcaption></figure>
-    </div>
-    <p class="showcase-copy">Real industrial photography — no AI-generated imagery. Explore detailed catalogue records and enquire directly without exposing a public phone number.</p>Explore detailed catalogue records and enquire directly without exposing a public phone number.</p>
   </section>
 
   <section id="contact" class="legacy-section map-section">
@@ -113,44 +88,64 @@ fetch('data/products.json').then(r=>r.json()).then(products=>{
   const sections=[...new Set(products.map(p=>p.Section).filter(Boolean))];
   document.getElementById('section-count').textContent=sections.length;
   const counts=products.reduce((a,p)=>{if(p.Section)a[p.Section]=(a[p.Section]||0)+1;return a},{});
-  document.getElementById('section-cards').innerHTML=sections.slice(0,10).map(s=>{
-    const aqua = s.toLowerCase().includes('aqua products');
-    return `<a class="legacy-card ${aqua?'aqua-card':''}" href="catalogue.html?section=${encodeURIComponent(s)}">
-      ${aqua?`<div class="aqua-fish-layer" aria-hidden="true">
-        <span class="aqua-bubble b1"></span><span class="aqua-bubble b2"></span><span class="aqua-bubble b3"></span>
-        <img class="aqua-fish f1" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Sea_fish.png" alt="">
-        <img class="aqua-fish f2" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Transparent_Fish.svg" alt="">
-        <img class="aqua-fish f3" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Sea_fish.png" alt="">
-      </div>`:''}
-      <b>${escapeHtml(s)}</b><span>${counts[s].toLocaleString('en-IN')} products</span><small>Browse →</small>
-    </a>`;
+  document.getElementById('section-cards').innerHTML=sections.slice(0,10).map(function(s,idx){
+    const aqua=s.toLowerCase().includes('aqua products');
+    const imgs=["https://upload.wikimedia.org/wikipedia/commons/f/f5/Industrial_storage_tanks.jpg", "https://upload.wikimedia.org/wikipedia/commons/8/8b/Petrochemical_plant_-_Norway.jpg", "https://upload.wikimedia.org/wikipedia/commons/8/80/Chemical_Processing_Equipment_at_a_Poly-Silicon_Plant.JPG", "https://upload.wikimedia.org/wikipedia/commons/5/5c/INdustrial_piping.jpg"];
+    const realBg=aqua?'https://upload.wikimedia.org/wikipedia/commons/0/0c/Orange_clown_fish_2.jpg':imgs[idx % imgs.length];
+    return '<a class="legacy-card image-card '+(aqua?'aqua-card':'')+'" style="--card-bg:url(\"'+realBg+'\")" href="catalogue.html?section='+encodeURIComponent(s)+'">'+
+      '<div class="card-image-shade"></div>'+
+      (aqua?'<div class="aqua-fish-layer" aria-hidden="true">'+
+        '<span class="aqua-bubble b1"></span><span class="aqua-bubble b2"></span><span class="aqua-bubble b3"></span>'+
+        '<img class="aqua-fish f1" src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Orange_clown_fish_2.jpg" alt="">'+
+        '<img class="aqua-fish f2" src="https://upload.wikimedia.org/wikipedia/commons/8/83/Yellow_fish_in_the_aquarium.JPG" alt="">'+
+        '<img class="aqua-fish f3" src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Orange_clown_fish_2.jpg" alt="">'+
+      '</div>':'')+
+      '<div class="card-copy"><b>'+escapeHtml(s)+'</b><span>'+counts[s].toLocaleString('en-IN')+' products</span><small>Browse →</small></div></a>';
   }).join('');
-  const aquaCard=document.querySelector('.aqua-card');
-  if(aquaCard){
-    aquaCard.addEventListener('pointermove',e=>{
-      const r=aquaCard.getBoundingClientRect();
-      const x=(e.clientX-r.left)/r.width-.5;
-      const y=(e.clientY-r.top)/r.height-.5;
-      aquaCard.style.setProperty('--mx',`${x*12}px`);
-      aquaCard.style.setProperty('--my',`${y*8}px`);
+  var cards=Array.prototype.slice.call(document.querySelectorAll('.legacy-card'));
+  cards.forEach(function(card,i){
+    card.style.setProperty('--delay',(i*70)+'ms');
+    card.addEventListener('pointermove',function(e){
+      var r=card.getBoundingClientRect();
+      var x=(e.clientX-r.left)/r.width-.5;
+      var y=(e.clientY-r.top)/r.height-.5;
+      card.style.setProperty('--rx',(-y*5)+'deg');
+      card.style.setProperty('--ry',(x*5)+'deg');
+      card.style.setProperty('--mx',(x*8)+'px');
+      card.style.setProperty('--my',(y*6)+'px');
     });
-    aquaCard.addEventListener('pointerleave',()=>{aquaCard.style.setProperty('--mx','0px');aquaCard.style.setProperty('--my','0px');});
-  }
+    card.addEventListener('pointerleave',function(){
+      card.style.setProperty('--rx','0deg');
+      card.style.setProperty('--ry','0deg');
+      card.style.setProperty('--mx','0px');
+      card.style.setProperty('--my','0px');
+    });
+  });
 });
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 document.querySelector(".nav-toggle")?.addEventListener("click",()=>document.querySelector(".nav")?.classList.toggle("open"));
 
 (function(){
-  const slides=[...document.querySelectorAll('.hero-slide')];
-  const dots=[...document.querySelectorAll('.hero-progress span')];
+  var slides=Array.prototype.slice.call(document.querySelectorAll('.hero-slide'));
+  var dots=Array.prototype.slice.call(document.querySelectorAll('.hero-progress span'));
+  var hero=document.querySelector('.legacy-hero');
   if(!slides.length) return;
-  let current=0;
-  const show=i=>{
-    slides.forEach((s,n)=>s.classList.toggle('is-active',n===i));
-    dots.forEach((d,n)=>d.classList.toggle('is-active',n===i));
-  };
-  dots.forEach((d,i)=>d.addEventListener('click',()=>{current=i;show(current);}));
-  setInterval(()=>{current=(current+1)%slides.length;show(current)},5200);
+  var current=0, timer=null, paused=false;
+  function show(i){
+    current=(i+slides.length)%slides.length;
+    slides.forEach(function(s,n){s.classList.toggle('is-active',n===current);});
+    dots.forEach(function(d,n){d.classList.toggle('is-active',n===current);});
+  }
+  function start(){
+    clearInterval(timer);
+    timer=setInterval(function(){if(!paused)show(current+1);},5200);
+  }
+  dots.forEach(function(d,i){d.addEventListener('click',function(){show(i);start();});});
+  if(hero){
+    hero.addEventListener('mouseenter',function(){paused=true;});
+    hero.addEventListener('mouseleave',function(){paused=false;});
+  }
+  show(0);start();
 })();
 
 document.getElementById('home-search')?.addEventListener('submit',e=>{
@@ -158,6 +153,17 @@ document.getElementById('home-search')?.addEventListener('submit',e=>{
   const q=document.getElementById('home-q').value.trim();
   location.href='catalogue.html'+(q?'?q='+encodeURIComponent(q):'');
 });
+(function(){
+  var targets=Array.prototype.slice.call(document.querySelectorAll('.legacy-section,.legacy-card,.map-layout,.photo-credit'));
+  targets.forEach(function(el){el.classList.add('reveal-ready');});
+  if(!('IntersectionObserver' in window)){targets.forEach(function(el){el.classList.add('reveal-in');});return;}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){entry.target.classList.add('reveal-in');io.unobserve(entry.target);}
+    });
+  },{threshold:.12});
+  targets.forEach(function(el){io.observe(el);});
+})();
 </script>
 </body>
 </html>
