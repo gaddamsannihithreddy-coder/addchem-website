@@ -92,7 +92,7 @@ fetch('data/products.json').then(r=>r.json()).then(products=>{
     const aqua=s.toLowerCase().includes('aqua products');
     const imgs=["https://upload.wikimedia.org/wikipedia/commons/f/f5/Industrial_storage_tanks.jpg", "https://upload.wikimedia.org/wikipedia/commons/8/8b/Petrochemical_plant_-_Norway.jpg", "https://upload.wikimedia.org/wikipedia/commons/8/80/Chemical_Processing_Equipment_at_a_Poly-Silicon_Plant.JPG", "https://upload.wikimedia.org/wikipedia/commons/5/5c/INdustrial_piping.jpg"];
     const realBg=aqua?'https://upload.wikimedia.org/wikipedia/commons/0/0c/Orange_clown_fish_2.jpg':imgs[idx % imgs.length];
-    return '<a class="legacy-card image-card '+(aqua?'aqua-card':'')+'" style="--card-bg:url(\"'+realBg+'\")" href="catalogue.html?section='+encodeURIComponent(s)+'">'+
+    return '<a class="legacy-card image-card '+(aqua?'aqua-card':'')+'" style="--card-bg:url('+realBg+')" href="catalogue.html?section='+encodeURIComponent(s)+'">'+
       '<div class="card-image-shade"></div>'+
       (aqua?'<div class="aqua-fish-layer" aria-hidden="true">'+
         '<span class="aqua-bubble b1"></span><span class="aqua-bubble b2"></span><span class="aqua-bubble b3"></span>'+
@@ -163,6 +163,12 @@ document.getElementById('home-search')?.addEventListener('submit',e=>{
     });
   },{threshold:.12});
   targets.forEach(function(el){io.observe(el);});
+})();
+
+(function(){
+  document.querySelectorAll('img').forEach(function(img){
+    img.addEventListener('error',function(){ img.style.display='none'; });
+  });
 })();
 </script>
 </body>

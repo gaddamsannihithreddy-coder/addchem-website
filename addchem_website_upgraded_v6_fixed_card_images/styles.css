@@ -155,7 +155,7 @@ to{transform:translateY(4px) scale(1.03)}}
 .legacy-cards{perspective:1200px}
 .image-card{
   position:relative;min-height:190px;overflow:hidden;isolation:isolate;
-  background:#101419 center/cover var(--card-bg) no-repeat;color:#fff;
+  background-color:#101419;background-image:var(--card-bg);background-position:center;background-size:cover;background-repeat:no-repeat;color:#fff;
   border-color:rgba(0,0,0,.06);
   transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translate3d(var(--mx,0),var(--my,0),0);
   transition:transform .16s ease,box-shadow .35s ease,border-color .3s ease;
