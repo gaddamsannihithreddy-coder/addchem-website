@@ -20,7 +20,7 @@
 
 <main>
   <section class="legacy-hero">
-    <div class="hero-image" role="img" aria-label="Chemistry laboratory with glassware"></div>
+    <div class="hero-image" role="img" aria-label="Real chemistry laboratory photograph"></div>
     <div class="hero-overlay"></div>
     <div class="legacy-hero-content">
       <div class="eyebrow">ADDCHEM · SPECIALTY CHEMICALS</div>
@@ -40,15 +40,42 @@
   </section>
 
   <section class="legacy-section pale">
+    <div class="home-catalogue-search">
+      <div>
+        <span>CATALOGUE SEARCH</span>
+        <h3>Search the full product catalogue</h3>
+      </div>
+      <form id="home-search" class="home-search-form">
+        <input id="home-q" type="search" placeholder="Search product name, CAS number, product code or HSN code…" aria-label="Search catalogue">
+        <button class="btn btn-primary" type="submit">Search Catalogue</button>
+      </form>
+    </div>
     <div class="legacy-title"><span>PRODUCT RANGE</span><h2>Browse the catalogue by section</h2></div>
     <div id="section-cards" class="legacy-cards"></div>
+    <div class="aqua-spotlight">
+      <div class="aqua-water"></div>
+      <div class="aqua-copy">
+        <span>AQUA PRODUCTS</span>
+        <h3>Water-focused chemistry, with a living interface.</h3>
+        <p>Explore Aqua Products for water analysis, testing and related applications.</p>
+        <a class="btn btn-light aqua-cta" href="catalogue.html?section=Aqua%20Products">Explore Aqua Products →</a>
+      </div>
+      <div class="aqua-scene" aria-hidden="true">
+        <span class="bubble bubble-a"></span><span class="bubble bubble-b"></span><span class="bubble bubble-c"></span><span class="bubble bubble-d"></span>
+        <img class="scene-fish scene-fish-a" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Sea_fish.png" alt="">
+        <img class="scene-fish scene-fish-b" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Transparent_Fish.svg" alt="">
+        <img class="scene-fish scene-fish-c" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Sea_fish.png" alt="">
+      </div>
+    </div>
     <div class="center"><a class="btn btn-primary" href="catalogue.html">View Full Catalogue</a></div>
   </section>
 
   <section class="legacy-section chemistry-showcase">
     <div class="legacy-title"><span>CHEMISTRY IN FOCUS</span><h2>Laboratory-first, information-rich.</h2></div>
-    <div class="image-strip">
-      <div class="strip-image pos-left"></div><div class="strip-image pos-mid"></div><div class="strip-image pos-right"></div>
+    <div class="image-strip real-photo-grid">
+      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Bottles_of_chemicals.jpg" alt="Real laboratory chemical bottles"><figcaption>Chemicals & reagents</figcaption></figure>
+      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Laboratory_Glasswares.jpg" alt="Real laboratory glassware"><figcaption>Laboratory glassware</figcaption></figure>
+      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Chemistry_laboratory.jpg" alt="Real chemistry laboratory"><figcaption>Chemistry laboratory</figcaption></figure>
     </div>
     <p class="showcase-copy">Explore detailed catalogue records and enquire directly without exposing a public phone number.</p>
   </section>
@@ -67,6 +94,7 @@
   </section>
 </main>
 
+<section class="photo-credit"><strong>Photo credits:</strong> Wikimedia Commons — National Cancer Institute / Diane A. Reid; Ajay Kumar Chaurasiya; Cjp24. Images are used according to their listed licenses.</section>
 <footer class="footer legacy-footer">
   <div><strong>ADDCHEM</strong><span>ADD CHEMISTRY TO...</span></div>
   <div>Adikmet Main Road, Vidya Nagar, Adikmet, Hyderabad, Telangana 500044</div>
@@ -79,12 +107,37 @@ fetch('data/products.json').then(r=>r.json()).then(products=>{
   const sections=[...new Set(products.map(p=>p.Section).filter(Boolean))];
   document.getElementById('section-count').textContent=sections.length;
   const counts=products.reduce((a,p)=>{if(p.Section)a[p.Section]=(a[p.Section]||0)+1;return a},{});
-  document.getElementById('section-cards').innerHTML=sections.slice(0,10).map(s=>
-    `<a class="legacy-card" href="catalogue.html?section=${encodeURIComponent(s)}"><b>${escapeHtml(s)}</b><span>${counts[s].toLocaleString('en-IN')} products</span><small>Browse →</small></a>`
-  ).join('');
+  document.getElementById('section-cards').innerHTML=sections.slice(0,10).map(s=>{
+    const aqua = s.toLowerCase().includes('aqua products');
+    return `<a class="legacy-card ${aqua?'aqua-card':''}" href="catalogue.html?section=${encodeURIComponent(s)}">
+      ${aqua?`<div class="aqua-fish-layer" aria-hidden="true">
+        <span class="aqua-bubble b1"></span><span class="aqua-bubble b2"></span><span class="aqua-bubble b3"></span>
+        <img class="aqua-fish f1" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Sea_fish.png" alt="">
+        <img class="aqua-fish f2" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Transparent_Fish.svg" alt="">
+        <img class="aqua-fish f3" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Sea_fish.png" alt="">
+      </div>`:''}
+      <b>${escapeHtml(s)}</b><span>${counts[s].toLocaleString('en-IN')} products</span><small>Browse →</small>
+    </a>`;
+  }).join('');
+  const aquaCard=document.querySelector('.aqua-card');
+  if(aquaCard){
+    aquaCard.addEventListener('pointermove',e=>{
+      const r=aquaCard.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5;
+      const y=(e.clientY-r.top)/r.height-.5;
+      aquaCard.style.setProperty('--mx',`${x*12}px`);
+      aquaCard.style.setProperty('--my',`${y*8}px`);
+    });
+    aquaCard.addEventListener('pointerleave',()=>{aquaCard.style.setProperty('--mx','0px');aquaCard.style.setProperty('--my','0px');});
+  }
 });
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 document.querySelector(".nav-toggle")?.addEventListener("click",()=>document.querySelector(".nav")?.classList.toggle("open"));
+document.getElementById('home-search')?.addEventListener('submit',e=>{
+  e.preventDefault();
+  const q=document.getElementById('home-q').value.trim();
+  location.href='catalogue.html'+(q?'?q='+encodeURIComponent(q):'');
+});
 </script>
 </body>
 </html>

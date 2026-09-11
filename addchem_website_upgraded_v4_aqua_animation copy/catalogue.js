@@ -11,7 +11,9 @@ Promise.all([fetch('data/products.json').then(r=>r.json()),fetch('data/summary.j
   const grades=[...new Set(products.map(p=>p['Grade / Traceability']).filter(Boolean))].sort();
   sections.forEach(x=>els.section.insertAdjacentHTML('beforeend',`<option>${escapeHtml(x)}</option>`));
   grades.forEach(x=>els.grade.insertAdjacentHTML('beforeend',`<option>${escapeHtml(x)}</option>`));
-  const qs=new URLSearchParams(location.search); if(qs.get('section')) els.section.value=qs.get('section');
+  const qs=new URLSearchParams(location.search);
+  if(qs.get('section')) els.section.value=qs.get('section');
+  if(qs.get('q')) els.search.value=qs.get('q');
   [els.search,els.section,els.grade].forEach(e=>e.addEventListener('input',apply));
   els.reset.addEventListener('click',()=>{els.search.value='';els.section.value='';els.grade.value='';apply();});
   els.prev.onclick=()=>{if(state.page>1){state.page--;render();}};
