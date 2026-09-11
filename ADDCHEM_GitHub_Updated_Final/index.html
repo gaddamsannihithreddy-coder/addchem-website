@@ -83,56 +83,88 @@
 </footer>
 
 <script>
-fetch('data/products.json').then(r=>r.json()).then(products=>{
-  document.getElementById('product-count').textContent=products.length.toLocaleString('en-IN');
-  const sections=[...new Set(products.map(p=>p.Section).filter(Boolean))];
-  document.getElementById('section-count').textContent=sections.length;
-  const counts=products.reduce((a,p)=>{if(p.Section)a[p.Section]=(a[p.Section]||0)+1;return a},{});
-  const categoryImages = ["https://upload.wikimedia.org/wikipedia/commons/f/f5/Industrial_storage_tanks.jpg", "https://upload.wikimedia.org/wikipedia/commons/8/8b/Petrochemical_plant_-_Norway.jpg", "https://upload.wikimedia.org/wikipedia/commons/8/80/Chemical_Processing_Equipment_at_a_Poly-Silicon_Plant.JPG", "https://upload.wikimedia.org/wikipedia/commons/5/5c/INdustrial_piping.jpg", "https://upload.wikimedia.org/wikipedia/commons/2/26/Laboratory_chemicals.jpg", "https://upload.wikimedia.org/wikipedia/commons/f/fa/Chemical_Plant_Western_Reclamation.jpg"];
-  const aquaImage = "https://upload.wikimedia.org/wikipedia/commons/f/f6/Clownfish_in_blue_water.jpg";
+fetch('data/products.json').then(function(r){
+  if(!r.ok) throw new Error('Catalogue data could not be loaded');
+  return r.json();
+}).then(function(products){
+  var productCount=document.getElementById('product-count');
+  var sectionCount=document.getElementById('section-count');
+  var cardHost=document.getElementById('section-cards');
 
-  document.getElementById('section-cards').innerHTML=sections.slice(0,12).map(function(s,idx){
-    const isAqua=s.toLowerCase().includes('aqua products');
-    return '<a class="legacy-card image-card '+(isAqua?'aqua-card':'')+'" href="catalogue.html?section='+encodeURIComponent(s)+'">'+
-      '<div class="card-image-shade"></div>'+
-      (isAqua?'<div class="aqua-fish-layer" aria-hidden="true">'+
-        '<span class="aqua-bubble b1"></span><span class="aqua-bubble b2"></span><span class="aqua-bubble b3"></span>'+
-        '<span class="aqua-fish-photo fish-a"></span><span class="aqua-fish-photo fish-b"></span>'+
-      '</div>':'')+
-      '<div class="card-copy"><b>'+escapeHtml(s)+'</b><span>'+counts[s].toLocaleString('en-IN')+' products</span><small>Browse →</small></div></a>';
+  productCount.textContent=products.length.toLocaleString('en-IN');
+  var sections=[...new Set(products.map(function(p){return p.Section;}).filter(Boolean))];
+  sectionCount.textContent=sections.length;
+  var counts=products.reduce(function(a,p){
+    if(p.Section) a[p.Section]=(a[p.Section]||0)+1;
+    return a;
+  },{});
+
+  /* Real public-domain/Creative-Commons photographs. */
+  var categoryImages=[
+    'https://upload.wikimedia.org/wikipedia/commons/f/f5/Industrial_storage_tanks.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/8/8b/Petrochemical_plant_-_Norway.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/8/80/Chemical_Processing_Equipment_at_a_Poly-Silicon_Plant.JPG',
+    'https://upload.wikimedia.org/wikipedia/commons/5/5c/INdustrial_piping.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/2/26/Laboratory_chemicals.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/f/fa/Chemical_Plant_Western_Reclamation.jpg'
+  ];
+  var aquaImage='https://upload.wikimedia.org/wikipedia/commons/f/f6/Clownfish_in_blue_water.jpg';
+
+  function pickImage(section, index){
+    var name=section.toLowerCase();
+    if(name.indexOf('aqua products')!==-1) return aquaImage;
+    if(name.indexOf('fine')!==-1) return categoryImages[4];
+    if(name.indexOf('pharmacopeia')!==-1 || name.indexOf('building blocks')!==-1) return categoryImages[2];
+    if(name.indexOf('gc secondary')!==-1 || name.indexOf('standards')!==-1) return categoryImages[3];
+    if(name.indexOf('diagnostic')!==-1) return categoryImages[4];
+    if(name.indexOf('pharmaceutical')!==-1) return categoryImages[5];
+    if(name.indexOf('nitrosamine')!==-1) return categoryImages[1];
+    if(name.indexOf('working')!==-1) return categoryImages[2];
+    return categoryImages[index % categoryImages.length];
+  }
+
+  cardHost.innerHTML=sections.slice(0,12).map(function(section,index){
+    var aqua=section.toLowerCase().indexOf('aqua products')!==-1;
+    var img=pickImage(section,index);
+    var fish=aqua ? (
+      '<div class="aqua-fish-layer" aria-hidden="true">'+
+      '<span class="aqua-bubble b1"></span><span class="aqua-bubble b2"></span><span class="aqua-bubble b3"></span>'+
+      '<span class="aqua-fish fish-one"></span><span class="aqua-fish fish-two"></span>'+
+      '</div>'
+    ) : '';
+
+    return '<a class="legacy-card image-card '+(aqua?'aqua-card':'')+'" href="catalogue.html?section='+encodeURIComponent(section)+'">'+
+      '<img class="card-photo" src="'+img+'" alt="" loading="lazy" decoding="async">'+
+      '<span class="card-shade"></span>'+fish+
+      '<span class="card-copy"><b>'+escapeHtml(section)+'</b><span>'+counts[section].toLocaleString('en-IN')+' products</span><small>Browse →</small></span>'+
+      '</a>';
   }).join('');
 
-  document.querySelectorAll('.legacy-card').forEach(function(card,i){
-    var isAqua=card.classList.contains('aqua-card');
-    var sectionName=card.querySelector('.card-copy b')?.textContent?.toLowerCase()||'';
-    var image;
-    if(isAqua) image=aquaImage;
-    else if(sectionName.includes('fine')) image=categoryImages[4];
-    else if(sectionName.includes('pharmacopeia') || sectionName.includes('building')) image=categoryImages[2];
-    else if(sectionName.includes('gc secondary') || sectionName.includes('standards')) image=categoryImages[3];
-    else if(sectionName.includes('diagnostic')) image=categoryImages[4];
-    else if(sectionName.includes('pharmaceutical')) image=categoryImages[5];
-    else if(sectionName.includes('nitrosamine')) image=categoryImages[1];
-    else if(sectionName.includes('working')) image=categoryImages[2];
-    else image=categoryImages[i % categoryImages.length];
-
-    card.style.setProperty('--card-photo', 'url("'+image+'")');
-    card.style.setProperty('--delay',(i*70)+'ms');
-
+  var cards=Array.prototype.slice.call(document.querySelectorAll('.legacy-card'));
+  cards.forEach(function(card,index){
+    card.style.setProperty('--delay',(index*70)+'ms');
     card.addEventListener('pointermove',function(e){
-      var r=card.getBoundingClientRect();
-      var x=(e.clientX-r.left)/r.width-.5;
-      var y=(e.clientY-r.top)/r.height-.5;
-      card.style.setProperty('--rx',(-y*5)+'deg');
-      card.style.setProperty('--ry',(x*5)+'deg');
-      card.style.setProperty('--mx',(x*8)+'px');
-      card.style.setProperty('--my',(y*6)+'px');
+      var rect=card.getBoundingClientRect();
+      var x=(e.clientX-rect.left)/rect.width-0.5;
+      var y=(e.clientY-rect.top)/rect.height-0.5;
+      card.style.setProperty('--rx',(-y*4)+'deg');
+      card.style.setProperty('--ry',(x*4)+'deg');
+      card.style.setProperty('--lift','-4px');
+      card.style.setProperty('--photo-x',(x*10)+'px');
+      card.style.setProperty('--photo-y',(y*8)+'px');
     });
     card.addEventListener('pointerleave',function(){
-      card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');
-      card.style.setProperty('--mx','0px');card.style.setProperty('--my','0px');
+      card.style.setProperty('--rx','0deg');
+      card.style.setProperty('--ry','0deg');
+      card.style.setProperty('--lift','0px');
+      card.style.setProperty('--photo-x','0px');
+      card.style.setProperty('--photo-y','0px');
     });
   });
+}).catch(function(error){
+  console.error(error);
+  document.getElementById('section-cards').innerHTML='<div class="catalogue-error">Catalogue sections could not be loaded. <a href="catalogue.html">Open the full catalogue →</a></div>';
+});
 
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 document.querySelector(".nav-toggle")?.addEventListener("click",()=>document.querySelector(".nav")?.classList.toggle("open"));
@@ -178,39 +210,56 @@ document.getElementById('home-search')?.addEventListener('submit',e=>{
 })();
 
 (function(){
-  document.querySelectorAll('img').forEach(function(img){
-    img.addEventListener('error',function(){ img.classList.add('img-load-error'); });
+  document.querySelectorAll('img.card-photo').forEach(function(img){
+    img.addEventListener('error',function(){
+      img.classList.add('img-load-error');
+    });
   });
 })();
 
+
 (function(){
-  var field=document.querySelector('.particle-layer');
-  if(!field) return;
-  var particles=Array.prototype.slice.call(field.querySelectorAll('i'));
-  var pointer={x:window.innerWidth/2,y:window.innerHeight/2};
-  var target={x:pointer.x,y:pointer.y};
-  var raf=0;
-  function move(e){
-    target.x=e.clientX;target.y=e.clientY;
-    field.style.setProperty('--cursor-x',target.x+'px');
-    field.style.setProperty('--cursor-y',target.y+'px');
+  var layer=document.querySelector('.particle-layer');
+  if(!layer) return;
+  var points=Array.prototype.slice.call(layer.querySelectorAll('i'));
+  var mouse={x:window.innerWidth*.5,y:window.innerHeight*.5};
+  var current={x:mouse.x,y:mouse.y};
+  var lastRipple=0;
+
+  function pointerMove(e){
+    mouse.x=e.clientX; mouse.y=e.clientY;
+    layer.style.setProperty('--mouse-x',mouse.x+'px');
+    layer.style.setProperty('--mouse-y',mouse.y+'px');
   }
-  window.addEventListener('pointermove',move,{passive:true});
-  function tick(){
-    pointer.x += (target.x-pointer.x)*0.08;
-    pointer.y += (target.y-pointer.y)*0.08;
-    particles.forEach(function(p,idx){
-      var rect=p.getBoundingClientRect();
-      var dx=pointer.x-(rect.left+rect.width/2);
-      var dy=pointer.y-(rect.top+rect.height/2);
-      var dist=Math.max(70,Math.hypot(dx,dy));
-      var force=Math.min(18,9000/(dist*dist));
-      p.style.setProperty('--cursor-shift-x',(-dx/dist*force)+'px');
-      p.style.setProperty('--cursor-shift-y',(-dy/dist*force)+'px');
+  window.addEventListener('pointermove',pointerMove,{passive:true});
+
+  window.addEventListener('pointerdown',function(e){
+    var now=performance.now();
+    if(now-lastRipple<250) return;
+    lastRipple=now;
+    var ripple=document.createElement('span');
+    ripple.className='cursor-ripple';
+    ripple.style.left=e.clientX+'px'; ripple.style.top=e.clientY+'px';
+    layer.appendChild(ripple);
+    setTimeout(function(){ripple.remove();},700);
+  },{passive:true});
+
+  function frame(){
+    current.x+=(mouse.x-current.x)*.12;
+    current.y+=(mouse.y-current.y)*.12;
+    points.forEach(function(point){
+      var rect=point.getBoundingClientRect();
+      var px=rect.left+rect.width/2;
+      var py=rect.top+rect.height/2;
+      var dx=px-current.x, dy=py-current.y;
+      var distance=Math.max(90,Math.hypot(dx,dy));
+      var influence=Math.max(0,1-distance/260);
+      point.style.setProperty('--cursor-x',(dx/distance*influence*22)+'px');
+      point.style.setProperty('--cursor-y',(dy/distance*influence*22)+'px');
     });
-    raf=requestAnimationFrame(tick);
+    requestAnimationFrame(frame);
   }
-  cancelAnimationFrame(raf); tick();
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>
