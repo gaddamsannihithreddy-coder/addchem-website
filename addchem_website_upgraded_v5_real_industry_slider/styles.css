@@ -139,3 +139,22 @@ a{text-decoration:none;color:inherit}button,input,select{font:inherit}
 .bubble{position:absolute;width:10px;height:10px;border:1px solid rgba(207,250,255,.64);border-radius:50%;background:rgba(210,250,255,.05);animation:bubbleRise 6s linear infinite}.bubble-a{right:18%;bottom:18%}.bubble-b{right:31%;bottom:5%;animation-delay:1.6s}.bubble-c{right:43%;bottom:26%;animation-delay:3s}.bubble-d{right:11%;bottom:31%;animation-delay:4s}
 @media(max-width:900px){.aqua-copy{width:65%}.scene-fish-a{right:4%}.scene-fish-b{right:0}.scene-fish-c{right:28%}}
 @media(max-width:620px){.aqua-spotlight{min-height:360px}.aqua-copy{width:100%;padding:26px}.aqua-scene{opacity:.52}.scene-fish-a{width:120px;right:-8%;top:58%}.scene-fish-b{width:90px;right:2%;top:72%}.scene-fish-c{width:68px;right:38%;top:78%}}
+
+
+/* ===== V5: real industrial image carousel at the homepage entrance ===== */
+.hero-slideshow{position:absolute;inset:0;overflow:hidden;background:#061016}
+.hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.25s ease;transform:scale(1.035);overflow:hidden}
+.hero-slide.is-active{opacity:1;animation:heroKenBurns 5.2s ease both}
+.hero-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-slide:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(1,6,9,.82),rgba(1,6,9,.53) 42%,rgba(1,6,9,.18) 100%)}
+@keyframes heroKenBurns{from{transform:scale(1.035)}to{transform:scale(1.0)}}
+.hero-progress{position:absolute;left:22px;bottom:24px;z-index:3;display:flex;gap:7px}
+.hero-progress span{width:28px;height:3px;border-radius:2px;background:rgba(255,255,255,.35);cursor:pointer;transition:.25s}
+.hero-progress span.is-active{background:#ff232a;width:54px}
+
+.real-photo img{background:#101318}
+.real-photo img[src]{min-height:1px}
+.real-photo img:not([src]), .scene-fish:not([src]){display:none}
+.scene-fish{object-fit:cover;border-radius:50%;mix-blend-mode:screen}
+.aqua-scene .scene-fish{box-shadow:0 12px 28px rgba(0,0,0,.12)}
+.photo-credit{line-height:1.55}

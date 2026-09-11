@@ -20,7 +20,13 @@
 
 <main>
   <section class="legacy-hero">
-    <div class="hero-image" role="img" aria-label="Real chemistry laboratory photograph"></div>
+    <div class="hero-slideshow" aria-label="Real chemical industry photographs">
+      <div class="hero-slide is-active"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Industrial_storage_tanks.jpg" alt="Industrial chemical storage tanks"></div>
+      <div class="hero-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Petrochemical_plant_-_Norway.jpg" alt="Petrochemical plant in Norway"></div>
+      <div class="hero-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/8/80/Chemical_Processing_Equipment_at_a_Poly-Silicon_Plant.JPG" alt="Chemical processing equipment at a plant"></div>
+      <div class="hero-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/INdustrial_piping.jpg" alt="Industrial piping in a petrochemical plant"></div>
+      <div class="hero-progress" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    </div>
     <div class="hero-overlay"></div>
     <div class="legacy-hero-content">
       <div class="eyebrow">ADDCHEM · SPECIALTY CHEMICALS</div>
@@ -62,9 +68,9 @@
       </div>
       <div class="aqua-scene" aria-hidden="true">
         <span class="bubble bubble-a"></span><span class="bubble bubble-b"></span><span class="bubble bubble-c"></span><span class="bubble bubble-d"></span>
-        <img class="scene-fish scene-fish-a" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Sea_fish.png" alt="">
-        <img class="scene-fish scene-fish-b" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Transparent_Fish.svg" alt="">
-        <img class="scene-fish scene-fish-c" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Sea_fish.png" alt="">
+        <img class="scene-fish scene-fish-a" src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Orange_clown_fish_2.jpg" alt="">
+        <img class="scene-fish scene-fish-b" src="https://upload.wikimedia.org/wikipedia/commons/8/83/Yellow_fish_in_the_aquarium.JPG" alt="">
+        <img class="scene-fish scene-fish-c" src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Orange_clown_fish_2.jpg" alt="">
       </div>
     </div>
     <div class="center"><a class="btn btn-primary" href="catalogue.html">View Full Catalogue</a></div>
@@ -73,11 +79,11 @@
   <section class="legacy-section chemistry-showcase">
     <div class="legacy-title"><span>CHEMISTRY IN FOCUS</span><h2>Laboratory-first, information-rich.</h2></div>
     <div class="image-strip real-photo-grid">
-      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Bottles_of_chemicals.jpg" alt="Real laboratory chemical bottles"><figcaption>Chemicals & reagents</figcaption></figure>
-      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Laboratory_Glasswares.jpg" alt="Real laboratory glassware"><figcaption>Laboratory glassware</figcaption></figure>
-      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Chemistry_laboratory.jpg" alt="Real chemistry laboratory"><figcaption>Chemistry laboratory</figcaption></figure>
+      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Industrial_storage_tanks.jpg" alt="Real chemical storage tanks"><figcaption>Chemical storage</figcaption></figure>
+      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Petrochemical_plant_-_Norway.jpg" alt="Real petrochemical plant"><figcaption>Process plant</figcaption></figure>
+      <figure class="real-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/INdustrial_piping.jpg" alt="Real industrial piping"><figcaption>Industrial piping</figcaption></figure>
     </div>
-    <p class="showcase-copy">Explore detailed catalogue records and enquire directly without exposing a public phone number.</p>
+    <p class="showcase-copy">Real industrial photography — no AI-generated imagery. Explore detailed catalogue records and enquire directly without exposing a public phone number.</p>Explore detailed catalogue records and enquire directly without exposing a public phone number.</p>
   </section>
 
   <section id="contact" class="legacy-section map-section">
@@ -133,6 +139,20 @@ fetch('data/products.json').then(r=>r.json()).then(products=>{
 });
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 document.querySelector(".nav-toggle")?.addEventListener("click",()=>document.querySelector(".nav")?.classList.toggle("open"));
+
+(function(){
+  const slides=[...document.querySelectorAll('.hero-slide')];
+  const dots=[...document.querySelectorAll('.hero-progress span')];
+  if(!slides.length) return;
+  let current=0;
+  const show=i=>{
+    slides.forEach((s,n)=>s.classList.toggle('is-active',n===i));
+    dots.forEach((d,n)=>d.classList.toggle('is-active',n===i));
+  };
+  dots.forEach((d,i)=>d.addEventListener('click',()=>{current=i;show(current);}));
+  setInterval(()=>{current=(current+1)%slides.length;show(current)},5200);
+})();
+
 document.getElementById('home-search')?.addEventListener('submit',e=>{
   e.preventDefault();
   const q=document.getElementById('home-q').value.trim();
