@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ADDCHEM — specialty chemicals, laboratory chemicals and research products.">
+<title>ADDCHEM | Specialty Chemicals & Laboratory Products</title>
+<link rel="icon" href="assets/logo.png"><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="particle-layer" aria-hidden="true">
+  <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+</div>
+
+<header class="site-header legacy-header">
+  <a class="brand" href="index.html"><img src="assets/logo.png" alt="ADDCHEM"></a>
+  <button class="nav-toggle" aria-label="Open menu">☰</button>
+  <nav class="nav"><a href="index.html" class="active">Home</a><a href="catalogue.html">Catalogue</a><a href="#about">About</a><a href="contact.html">Contact</a></nav>
+</header>
+
+<main>
+  <section class="legacy-hero">
+    <div class="hero-image" role="img" aria-label="Chemistry laboratory with glassware"></div>
+    <div class="hero-overlay"></div>
+    <div class="legacy-hero-content">
+      <div class="eyebrow">ADDCHEM · SPECIALTY CHEMICALS</div>
+      <h1>Quality chemistry.<br><span>Built for confidence.</span></h1>
+      <p>Fine chemicals, laboratory reagents, research products and specialty materials — with a complete searchable catalogue.</p>
+      <div class="hero-actions"><a class="btn btn-primary" href="catalogue.html">Explore Catalogue</a><a class="btn btn-light" href="#contact">Contact Us</a></div>
+      <div class="hero-mini-stats"><div><strong id="product-count">—</strong><span>catalogue products</span></div><div><strong id="section-count">—</strong><span>product sections</span></div></div>
+    </div>
+  </section>
+
+  <section id="about" class="legacy-section">
+    <div class="legacy-title"><span>ABOUT ADDCHEM</span><h2>Reliable products. Practical information.</h2></div>
+    <div class="legacy-columns">
+      <div><p>Use our catalogue to locate products quickly by product name, CAS number, product code, grade, pack size or HSN code.</p><p>The catalogue is maintained from the supplied Advent PL-07 dataset, with pricing intentionally omitted from the public catalogue.</p></div>
+      <div class="legacy-facts"><div><b>Fast Search</b><span>Product, CAS, code & HSN</span></div><div><b>Structured Data</b><span>Grade, pack & GST details</span></div><div><b>Direct Enquiry</b><span>WhatsApp from each product</span></div></div>
+    </div>
+  </section>
+
+  <section class="legacy-section pale">
+    <div class="legacy-title"><span>PRODUCT RANGE</span><h2>Browse the catalogue by section</h2></div>
+    <div id="section-cards" class="legacy-cards"></div>
+    <div class="center"><a class="btn btn-primary" href="catalogue.html">View Full Catalogue</a></div>
+  </section>
+
+  <section class="legacy-section chemistry-showcase">
+    <div class="legacy-title"><span>CHEMISTRY IN FOCUS</span><h2>Laboratory-first, information-rich.</h2></div>
+    <div class="image-strip">
+      <div class="strip-image pos-left"></div><div class="strip-image pos-mid"></div><div class="strip-image pos-right"></div>
+    </div>
+    <p class="showcase-copy">Explore detailed catalogue records and enquire directly without exposing a public phone number.</p>
+  </section>
+
+  <section id="contact" class="legacy-section map-section">
+    <div class="legacy-title"><span>FIND US</span><h2>Hyderabad location</h2></div>
+    <div class="map-layout">
+      <div class="address-card">
+        <div class="map-pin">⌖</div>
+        <h3>ADDCHEM</h3>
+        <p>Adikmet Main Road, Vidya Nagar, Adikmet, Hyderabad, Telangana 500044</p>
+        <a class="btn btn-primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Adikmet%20Main%20Road%2C%20Vidya%20Nagar%2C%20Adikmet%2C%20Hyderabad%2C%20Telangana%20500044">Open in Google Maps</a>
+      </div>
+      <div class="map-wrap"><iframe title="ADDCHEM Hyderabad location map" loading="lazy" src="https://www.google.com/maps?q=Adikmet%20Main%20Road%2C%20Vidya%20Nagar%2C%20Adikmet%2C%20Hyderabad%2C%20Telangana%20500044&output=embed"></iframe></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer legacy-footer">
+  <div><strong>ADDCHEM</strong><span>ADD CHEMISTRY TO...</span></div>
+  <div>Adikmet Main Road, Vidya Nagar, Adikmet, Hyderabad, Telangana 500044</div>
+  <div><a href="catalogue.html">Catalogue</a> · <a href="contact.html">Contact</a></div>
+</footer>
+
+<script>
+fetch('data/products.json').then(r=>r.json()).then(products=>{
+  document.getElementById('product-count').textContent=products.length.toLocaleString('en-IN');
+  const sections=[...new Set(products.map(p=>p.Section).filter(Boolean))];
+  document.getElementById('section-count').textContent=sections.length;
+  const counts=products.reduce((a,p)=>{if(p.Section)a[p.Section]=(a[p.Section]||0)+1;return a},{});
+  document.getElementById('section-cards').innerHTML=sections.slice(0,10).map(s=>
+    `<a class="legacy-card" href="catalogue.html?section=${encodeURIComponent(s)}"><b>${escapeHtml(s)}</b><span>${counts[s].toLocaleString('en-IN')} products</span><small>Browse →</small></a>`
+  ).join('');
+});
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+document.querySelector(".nav-toggle")?.addEventListener("click",()=>document.querySelector(".nav")?.classList.toggle("open"));
+</script>
+</body>
+</html>

@@ -18,6 +18,14 @@ Promise.all([fetch('data/products.json').then(r=>r.json()),fetch('data/summary.j
   els.next.onclick=()=>{if(state.page<Math.ceil(state.filtered.length/state.pageSize)){state.page++;render();}};
   apply();
 });
+function waUrl(p){
+  const name=p['Product Name']||'this product';
+  const code=p['Product Code']||'';
+  const cas=p['CAS Number']||'';
+  const pack=p['Pack Size']||'';
+  const msg=`Hello ADDCHEM, I am enquiring about ${name}${code?` (Product Code: ${code})`:''}${cas?` | CAS: ${cas}`:''}${pack?` | Pack Size: ${pack}`:''}. Please share availability and details.`;
+  return `https://wa.me/918919580575?text=${encodeURIComponent(msg)}`;
+}
 function apply(){
   const q=els.search.value.trim().toLowerCase(), s=els.section.value, g=els.grade.value;
   state.filtered=state.all.filter(p=>{
@@ -52,7 +60,8 @@ function open(id){
     ['Product Code',p['Product Code']],['Pack Size',p['Pack Size']],
     ['HSN Code',p['HSN Code']],['GST %',p['GST %']?`${p['GST %']}%`:'' ],['Other / Notes',p['Other / Notes']]
   ];
-  els.modalBody.innerHTML=fields.filter(x=>x[1]).map(([k,v])=>`<div><small>${escapeHtml(k)}</small><strong>${escapeHtml(v)}</strong></div>`).join('');
+  els.modalBody.innerHTML=fields.filter(x=>x[1]).map(([k,v])=>`<div><small>${escapeHtml(k)}</small><strong>${escapeHtml(v)}</strong></div>`).join('') +
+    `<div class="detail-wa"><a class="wa-btn wa-large" href="${waUrl(p)}" target="_blank" rel="noopener noreferrer">Enquire on WhatsApp</a></div>`;
   els.modal.setAttribute('aria-hidden','false');document.body.classList.add('no-scroll');
 }
 document.querySelectorAll('[data-close]').forEach(x=>x.addEventListener('click',()=>{els.modal.setAttribute('aria-hidden','true');document.body.classList.remove('no-scroll');}));
