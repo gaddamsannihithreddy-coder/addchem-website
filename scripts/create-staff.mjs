@@ -14,7 +14,7 @@ const password = await ask('Password (entered once, not saved by this script): '
 rl.close();
 if (password.length < 10) throw new Error('Use a password of at least 10 characters.');
 
-const iterations = 210000;
+const iterations = 100000;
 // Store the salt itself as standard Base64 and derive from the decoded random bytes.
 const salt = crypto.randomBytes(16);
 const saltB64 = salt.toString('base64');
