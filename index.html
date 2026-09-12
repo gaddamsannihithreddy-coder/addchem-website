@@ -15,7 +15,7 @@
 <header class="site-header legacy-header">
   <a class="brand" href="index.html"><img src="assets/logo.png" alt="ADDCHEM"></a>
   <button class="nav-toggle" aria-label="Open menu">☰</button>
-  <nav class="nav"><a href="index.html" class="active">Home</a><a href="catalogue.html">Catalogue</a><a href="#about">About</a><a href="contact.html">Contact</a></nav>
+  <nav class="nav"><a href="index.html" class="active">Home</a><a href="catalogue.html">Catalogue</a><a href="#about">About</a><a href="contact.html">Contact</a><a class="staff-nav-cta" id="public-staff-link" href="staff.html">Staff Login</a></nav>
 </header>
 
 <main>
@@ -291,6 +291,7 @@ document.getElementById('home-search')?.addEventListener('submit',e=>{
   }
   requestAnimationFrame(frame);
 })();
+  fetch('/api/auth/me',{credentials:'same-origin'}).then(function(r){return r.ok?r.json():null}).then(function(d){var a=document.getElementById('public-staff-link');if(a&&d&&d.staff){a.textContent='Staff Dashboard';a.href='staff.html';a.classList.add('is-signed-in');}}).catch(function(){});
 </script>
 </body>
 </html>

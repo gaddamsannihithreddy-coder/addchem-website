@@ -3,50 +3,76 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>ADDCHEM | Staff Dashboard</title>
-<link rel="icon" href="assets/logo.png">
+<title>ADDCHEM | Staff Portal</title>
+<link rel="icon" href="assets/logo-transparent.png">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="staff.css">
 </head>
 <body class="staff-page">
 <header class="site-header staff-header">
-  <a class="brand" href="index.html"><img src="assets/logo.png" alt="ADDCHEM"></a>
-  <nav class="nav staff-nav"><a href="index.html">Public Website</a><a href="catalogue.html">Catalogue</a><button id="logout-top" class="staff-link" hidden>Log out</button></nav>
+  <a class="brand" href="index.html" aria-label="ADDCHEM home"><img src="assets/logo-transparent.png" alt="ADDCHEM"></a>
+  <nav class="nav staff-nav" aria-label="Staff navigation">
+    <a href="index.html">Public Website</a>
+    <a href="catalogue.html">Catalogue</a>
+    <span class="nav-divider" aria-hidden="true"></span>
+    <span id="nav-staff-state" class="nav-staff-state" hidden>Staff Portal</span>
+    <button id="logout-top" class="staff-link" hidden>Log out</button>
+  </nav>
 </header>
 
 <main class="staff-shell">
-<section id="login-view" class="auth-card">
-  <div class="staff-mark" aria-hidden="true">▣</div>
-  <span class="eyebrow">PRIVATE STAFF AREA</span>
-  <h1>ADDCHEM Staff Login</h1>
-  <p class="muted">Private inventory and billing. Customers never need to log in.</p>
-  <form id="login-form" class="staff-form">
-    <label>Email<input id="email" type="email" autocomplete="username" required placeholder="staff@yourcompany.com"></label>
-    <label>Password<input id="password" type="password" autocomplete="current-password" required placeholder="••••••••••"></label>
-    <button class="btn btn-primary" type="submit">Sign in</button>
-  </form>
-  <div id="login-message" class="staff-message" role="alert" hidden></div>
+<section id="login-view" class="login-stage">
+  <div class="login-visual" aria-hidden="true">
+    <div class="orb orb-one"></div><div class="orb orb-two"></div>
+    <div class="molecule molecule-one"><i></i><i></i><i></i><i></i></div>
+    <div class="molecule molecule-two"><i></i><i></i><i></i></div>
+    <div class="chem-ring ring-one"></div><div class="chem-ring ring-two"></div>
+    <div class="flask-mark"><span></span></div>
+  </div>
+  <div class="login-copy">
+    <span class="eyebrow">ADDCHEM ENTERPRISES</span>
+    <h1>Operations,<br><span>under control.</span></h1>
+    <p>One secure workspace for inventory, stock movements and internal billing.</p>
+    <div class="login-benefits">
+      <div><b>Inventory</b><span>Track stock by SKU, grade and batch.</span></div>
+      <div><b>Billing</b><span>Create bills and automatically deduct stock.</span></div>
+      <div><b>Private access</b><span>Only authenticated staff can enter.</span></div>
+    </div>
+  </div>
+  <section class="auth-card" aria-labelledby="login-title">
+    <div class="auth-brand"><img src="assets/logo-transparent.png" alt="ADDCHEM Enterprises"></div>
+    <span class="eyebrow">PRIVATE STAFF PORTAL</span>
+    <h2 id="login-title">Welcome back</h2>
+    <p class="auth-subtitle">Sign in to manage inventory and billing.</p>
+    <form id="login-form" class="staff-form">
+      <label>Email<input id="email" type="email" autocomplete="username" required placeholder="staff@addchem.com"></label>
+      <label>Password<div class="password-wrap"><input id="password" type="password" autocomplete="current-password" required placeholder="Enter your password"><button id="toggle-password" type="button" aria-label="Show password">Show</button></div></label>
+      <button class="btn btn-primary auth-submit" type="submit"><span>Sign in securely</span><b>→</b></button>
+    </form>
+    <div id="login-message" class="staff-message" role="alert" hidden></div>
+    <div class="auth-footer"><span>Protected staff access</span><span>ADDCHEM</span></div>
+  </section>
 </section>
 
 <section id="dashboard-view" hidden>
   <div class="staff-headline">
-    <div><span class="eyebrow">PRIVATE STAFF DASHBOARD</span><h1>Inventory & Billing</h1><p class="muted">Track sellable units by SKU and Grade. Billing automatically removes units from inventory.</p></div>
-    <div class="staff-userbox"><span id="staff-email">—</span><button id="logout" class="btn btn-soft" type="button">Log out</button></div>
+    <div><span class="eyebrow">PRIVATE STAFF DASHBOARD</span><h1>Inventory & Billing</h1><p class="muted">Manage stock by SKU and grade. Billing automatically removes the billed quantity from inventory.</p></div>
+    <div class="staff-userbox"><span class="avatar" id="staff-avatar">S</span><div><small>Signed in as</small><strong id="staff-email">—</strong></div><button id="logout" class="btn btn-soft" type="button">Log out</button></div>
   </div>
 
   <div class="staff-tabs" role="tablist">
-    <button class="staff-tab active" data-tab="dashboard" type="button">Dashboard</button>
+    <button class="staff-tab active" data-tab="dashboard" type="button">Overview</button>
     <button class="staff-tab" data-tab="inventory" type="button">Inventory</button>
     <button class="staff-tab" data-tab="billing" type="button">Billing</button>
   </div>
 
   <section id="tab-dashboard" class="tab-panel">
     <div class="dashboard-cards">
-      <article class="metric-card"><span>Inventory SKUs</span><strong id="metric-skus">0</strong></article>
-      <article class="metric-card"><span>Total units on hand</span><strong id="metric-total">0</strong><small>Numeric sum across all units</small></article>
-      <article class="metric-card"><span>Different grades</span><strong id="metric-grades">0</strong></article>
+      <article class="metric-card"><span>Inventory SKUs</span><strong id="metric-skus">0</strong><small>Active stock lines</small></article>
+      <article class="metric-card"><span>Total units on hand</span><strong id="metric-total">0</strong><small>Across all inventory units</small></article>
+      <article class="metric-card"><span>Different grades</span><strong id="metric-grades">0</strong><small>Distinct grade entries</small></article>
     </div>
-    <div class="panel-card"><div class="panel-head"><div><span class="eyebrow">BY UNIT</span><h2>Inventory summary</h2></div><button id="refresh-dashboard" class="btn btn-soft">Refresh</button></div><div id="unit-summary" class="unit-summary"></div></div>
+    <div class="panel-card"><div class="panel-head"><div><span class="eyebrow">STOCK BY UNIT</span><h2>Inventory summary</h2></div><button id="refresh-dashboard" class="btn btn-soft">Refresh</button></div><div id="unit-summary" class="unit-summary"></div></div>
     <div class="panel-card"><div class="panel-head"><div><span class="eyebrow">RECENT BILLING</span><h2>Latest bills</h2></div><button id="refresh-bills" class="btn btn-soft">Refresh</button></div><div class="recent-bills-wrap"><table class="inventory-table"><thead><tr><th>Invoice</th><th>Customer</th><th>Units</th><th>Staff</th><th>Date</th></tr></thead><tbody id="recent-bills-body"></tbody></table></div></div>
   </section>
 
@@ -60,12 +86,12 @@
     <div class="inventory-summary"><span id="inventory-count">0 items</span><span>Inventory is visible only to authenticated staff.</span></div>
     <div class="inventory-table-wrap"><table class="inventory-table"><thead><tr><th>SKU</th><th>Product</th><th>CAS</th><th>Grade</th><th>Qty</th><th>Unit</th><th>Batch</th><th>Expiry</th><th></th></tr></thead><tbody id="inventory-table-body"></tbody></table></div>
     <div id="inventory-empty" class="inventory-empty" hidden>No inventory items yet.</div>
-    <section class="product-picker"><div class="picker-head"><div><span class="eyebrow">CATALOGUE</span><h2>Choose a catalogue product</h2><p class="muted">A product can have multiple grades. Each inventory line gets its own SKU.</p></div></div><div class="picker-row"><input id="product-picker-search" type="search" placeholder="Search by product, CAS, code or grade…"><span id="picker-count"></span></div><div id="product-picker" class="picker-grid"></div></section>
+    <section class="product-picker"><div class="picker-head"><div><span class="eyebrow">CATALOGUE</span><h2>Choose a catalogue product</h2><p class="muted">A product can have multiple grades. Each inventory line gets its own unique SKU.</p></div></div><div class="picker-row"><input id="product-picker-search" type="search" placeholder="Search by product, CAS, code or grade…"><span id="picker-count"></span></div><div id="product-picker" class="picker-grid"></div></section>
   </section>
 
   <section id="tab-billing" class="tab-panel" hidden>
     <div class="panel-card billing-card">
-      <div class="panel-head"><div><span class="eyebrow">INTERNAL BILLING</span><h2>Create a bill</h2><p class="muted">Adding a bill automatically subtracts the exact SKU/Grade quantity from inventory.</p></div></div>
+      <div class="panel-head"><div><span class="eyebrow">INTERNAL BILLING</span><h2>Create a bill</h2><p class="muted">Adding a bill atomically deducts the exact SKU/Grade quantity from inventory.</p></div></div>
       <div class="bill-meta-grid">
         <label>Customer name<input id="bill-customer" type="text" maxlength="160" placeholder="Customer / company"></label>
         <label>Customer reference<input id="bill-reference" type="text" maxlength="120" placeholder="PO / reference (optional)"></label>

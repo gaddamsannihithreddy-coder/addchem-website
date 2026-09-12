@@ -1,16 +1,7 @@
-The old repository files have been replaced with the newer ADDCHEM website files.
-
-Updated:
-- index.html
-- styles.css
-- catalogue.html
-- catalogue.js
-- contact.html
-- data/products.json
-- data/catalogue.csv
-- data/summary.json
-
-Preserved:
-- the original assets/logo.png from the uploaded older repository
-
-The assets/images folder is included for the real website photographs referenced by the new homepage.
+ADDCHEM staff portal refresh
+- Professional animated staff login UI
+- Transparent ADDCHEM logo
+- Staff Login CTA in public website header
+- Signed-in Staff Dashboard state in header
+- Inventory creation/update validation and unique SKU handling
+- Billing bill_items foreign-key/field mapping fixed

@@ -109,27 +109,33 @@ async function summary(env){
 
 async function upsertInventory(request, env, staff){
   const b=await bodyJson(request);
+  const id=Number(b.id)||null;
   const sku=String(b.sku||'').trim(); const productName=String(b.product_name||'').trim(); const unit=String(b.unit||'').trim();
   const grade=String(b.grade||'').trim(); const quantity=safeInt(b.quantity);
   if(!sku||!productName||!unit||quantity===null) return bad('SKU, product name, unit and a non-negative whole quantity are required.');
   if(!unitOk(unit)) return bad('Invalid unit.');
-  const existing=await env.DB.prepare('SELECT * FROM inventory_items WHERE sku=? LIMIT 1').bind(sku).first();
-  const now=nowIso();
-  if(existing){
-    const oldQty=Number(existing.quantity||0);
-    const delta=quantity-oldQty;
-    await env.DB.batch([
-      env.DB.prepare(`UPDATE inventory_items SET product_key=?,product_name=?,cas_number=?,grade=?,quantity=?,unit=?,batch_no=?,expiry_date=?,internal_notes=?,updated_by=?,updated_at=? WHERE id=?`).bind(b.product_key||null,productName,b.cas_number||null,grade||null,quantity,unit,b.batch_no||null,b.expiry_date||null,b.internal_notes||null,staff.id,now,existing.id),
-      delta!==0 ? env.DB.prepare(`INSERT INTO inventory_movements(inventory_id,delta_quantity,movement_type,reason,staff_id) VALUES(?,?,?,?,?)`).bind(existing.id,delta,'adjustment',String(b.reason||'Manual quantity correction'),staff.id) : env.DB.prepare('SELECT 1')
-    ]);
-    return json({ok:true});
-  }
-  const r=await env.DB.prepare(`INSERT INTO inventory_items(sku,product_key,product_name,cas_number,grade,quantity,unit,batch_no,expiry_date,internal_notes,updated_by) VALUES(?,?,?,?,?,?,?,?,?,?,?)`).bind(sku,b.product_key||null,productName,b.cas_number||null,grade||null,quantity,unit,b.batch_no||null,b.expiry_date||null,b.internal_notes||null,staff.id).run();
-  const id=r.meta.last_row_id;
-  await env.DB.prepare(`INSERT INTO inventory_movements(inventory_id,delta_quantity,movement_type,reason,staff_id) VALUES(?,?,?,?,?)`).bind(id,quantity,'opening',String(b.reason||'Opening inventory'),staff.id).run();
-  return json({ok:true,id});
-}
 
+  if(id){
+    const existing=await env.DB.prepare('SELECT * FROM inventory_items WHERE id=? LIMIT 1').bind(id).first();
+    if(!existing) return bad('Inventory item not found. Refresh and try again.',404);
+    const duplicate=await env.DB.prepare('SELECT id FROM inventory_items WHERE sku=? AND id<>? LIMIT 1').bind(sku,id).first();
+    if(duplicate) return bad('That SKU is already used by another inventory item. Choose a unique SKU.',409);
+    if(!String(b.reason||'').trim() && quantity!==Number(existing.quantity||0)) return bad('A reason is required when changing the quantity.');
+    const oldQty=Number(existing.quantity||0); const delta=quantity-oldQty; const now=nowIso();
+    await env.DB.batch([
+      env.DB.prepare(`UPDATE inventory_items SET sku=?,product_key=?,product_name=?,cas_number=?,grade=?,quantity=?,unit=?,batch_no=?,expiry_date=?,internal_notes=?,updated_by=?,updated_at=? WHERE id=?`).bind(sku,b.product_key||null,productName,b.cas_number||null,grade||null,quantity,unit,b.batch_no||null,b.expiry_date||null,b.internal_notes||null,staff.id,now,id),
+      delta!==0 ? env.DB.prepare(`INSERT INTO inventory_movements(inventory_id,delta_quantity,movement_type,reason,staff_id) VALUES(?,?,?,?,?)`).bind(id,delta,'adjustment',String(b.reason||'Manual quantity correction'),staff.id) : env.DB.prepare('SELECT 1')
+    ]);
+    return json({ok:true,id});
+  }
+
+  const duplicate=await env.DB.prepare('SELECT id FROM inventory_items WHERE sku=? LIMIT 1').bind(sku).first();
+  if(duplicate) return bad('That SKU already exists. Choose a different SKU for this inventory line.',409);
+  const r=await env.DB.prepare(`INSERT INTO inventory_items(sku,product_key,product_name,cas_number,grade,quantity,unit,batch_no,expiry_date,internal_notes,updated_by) VALUES(?,?,?,?,?,?,?,?,?,?,?)`).bind(sku,b.product_key||null,productName,b.cas_number||null,grade||null,quantity,unit,b.batch_no||null,b.expiry_date||null,b.internal_notes||null,staff.id).run();
+  const newId=r.meta.last_row_id;
+  await env.DB.prepare(`INSERT INTO inventory_movements(inventory_id,delta_quantity,movement_type,reason,staff_id) VALUES(?,?,?,?,?)`).bind(newId,quantity,'opening',String(b.reason||'Opening inventory'),staff.id).run();
+  return json({ok:true,id:newId});
+}
 async function deleteInventory(request, env, staff){
   const b=await bodyJson(request); const id=Number(b.id);
   if(!Number.isInteger(id)) return bad('Invalid inventory id.');
@@ -162,7 +168,7 @@ async function createBill(request, env, staff){
     const qty=grouped.get(Number(row.id));
     statements.push(env.DB.prepare('UPDATE inventory_items SET quantity=quantity-?,updated_by=?,updated_at=? WHERE id=?').bind(qty,staff.id,nowIso(),row.id));
     statements.push(env.DB.prepare("INSERT INTO inventory_movements(inventory_id,delta_quantity,movement_type,reference,staff_id) VALUES(?,?,?,?,?)").bind(row.id,-qty,'sale',invoiceNo,staff.id));
-    statements.push(env.DB.prepare("INSERT INTO bill_items(bill_id,inventory_id,sku,product_name,cas_number,grade,quantity,unit) SELECT last_insert_rowid(),?,?,?,?,?,?,? WHERE last_insert_rowid()>0").bind(invoiceNo,row.sku,row.product_name,row.cas_number,row.grade,qty,row.unit));
+    statements.push(env.DB.prepare("INSERT INTO bill_items(bill_id,invoice_no,inventory_id,sku,product_name,cas_number,grade,quantity,unit) SELECT id,?,?,?,?,?,?,?,? FROM bills WHERE invoice_no=?").bind(invoiceNo,row.id,row.sku,row.product_name,row.cas_number,row.grade,qty,row.unit,invoiceNo));
   }
   try {
     await env.DB.batch(statements);
