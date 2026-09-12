@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ADDCHEM | Staff Dashboard</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="staff.css">
+</head>
+<body class="staff-page">
+<header class="site-header staff-header">
+  <a class="brand" href="index.html"><img src="assets/logo.png" alt="ADDCHEM"></a>
+  <nav class="nav staff-nav"><a href="index.html">Public Website</a><a href="catalogue.html">Catalogue</a><button id="logout-top" class="staff-link" hidden>Log out</button></nav>
+</header>
+
+<main class="staff-shell">
+<section id="login-view" class="auth-card">
+  <div class="staff-mark" aria-hidden="true">▣</div>
+  <span class="eyebrow">PRIVATE STAFF AREA</span>
+  <h1>ADDCHEM Staff Login</h1>
+  <p class="muted">Private inventory and billing. Customers never need to log in.</p>
+  <form id="login-form" class="staff-form">
+    <label>Email<input id="email" type="email" autocomplete="username" required placeholder="staff@yourcompany.com"></label>
+    <label>Password<input id="password" type="password" autocomplete="current-password" required placeholder="••••••••••"></label>
+    <button class="btn btn-primary" type="submit">Sign in</button>
+  </form>
+  <div id="login-message" class="staff-message" role="alert" hidden></div>
+</section>
+
+<section id="dashboard-view" hidden>
+  <div class="staff-headline">
+    <div><span class="eyebrow">PRIVATE STAFF DASHBOARD</span><h1>Inventory & Billing</h1><p class="muted">Track sellable units by SKU and Grade. Billing automatically removes units from inventory.</p></div>
+    <div class="staff-userbox"><span id="staff-email">—</span><button id="logout" class="btn btn-soft" type="button">Log out</button></div>
+  </div>
+
+  <div class="staff-tabs" role="tablist">
+    <button class="staff-tab active" data-tab="dashboard" type="button">Dashboard</button>
+    <button class="staff-tab" data-tab="inventory" type="button">Inventory</button>
+    <button class="staff-tab" data-tab="billing" type="button">Billing</button>
+  </div>
+
+  <section id="tab-dashboard" class="tab-panel">
+    <div class="dashboard-cards">
+      <article class="metric-card"><span>Inventory SKUs</span><strong id="metric-skus">0</strong></article>
+      <article class="metric-card"><span>Total units on hand</span><strong id="metric-total">0</strong><small>Numeric sum across all units</small></article>
+      <article class="metric-card"><span>Different grades</span><strong id="metric-grades">0</strong></article>
+    </div>
+    <div class="panel-card"><div class="panel-head"><div><span class="eyebrow">BY UNIT</span><h2>Inventory summary</h2></div><button id="refresh-dashboard" class="btn btn-soft">Refresh</button></div><div id="unit-summary" class="unit-summary"></div></div>
+    <div class="panel-card"><div class="panel-head"><div><span class="eyebrow">RECENT BILLING</span><h2>Latest bills</h2></div><button id="refresh-bills" class="btn btn-soft">Refresh</button></div><div class="recent-bills-wrap"><table class="inventory-table"><thead><tr><th>Invoice</th><th>Customer</th><th>Units</th><th>Staff</th><th>Date</th></tr></thead><tbody id="recent-bills-body"></tbody></table></div></div>
+  </section>
+
+  <section id="tab-inventory" class="tab-panel" hidden>
+    <div class="inventory-tools">
+      <label class="search-wrap"><span>Find inventory</span><input id="inventory-search" type="search" placeholder="SKU, product, CAS or grade…"></label>
+      <button id="refresh-inventory" class="btn btn-soft" type="button">Refresh</button>
+      <button id="new-inventory" class="btn btn-primary" type="button">+ Add inventory item</button>
+    </div>
+    <div id="inventory-message" class="staff-message" role="status" hidden></div>
+    <div class="inventory-summary"><span id="inventory-count">0 items</span><span>Inventory is visible only to authenticated staff.</span></div>
+    <div class="inventory-table-wrap"><table class="inventory-table"><thead><tr><th>SKU</th><th>Product</th><th>CAS</th><th>Grade</th><th>Qty</th><th>Unit</th><th>Batch</th><th>Expiry</th><th></th></tr></thead><tbody id="inventory-table-body"></tbody></table></div>
+    <div id="inventory-empty" class="inventory-empty" hidden>No inventory items yet.</div>
+    <section class="product-picker"><div class="picker-head"><div><span class="eyebrow">CATALOGUE</span><h2>Choose a catalogue product</h2><p class="muted">A product can have multiple grades. Each inventory line gets its own SKU.</p></div></div><div class="picker-row"><input id="product-picker-search" type="search" placeholder="Search by product, CAS, code or grade…"><span id="picker-count"></span></div><div id="product-picker" class="picker-grid"></div></section>
+  </section>
+
+  <section id="tab-billing" class="tab-panel" hidden>
+    <div class="panel-card billing-card">
+      <div class="panel-head"><div><span class="eyebrow">INTERNAL BILLING</span><h2>Create a bill</h2><p class="muted">Adding a bill automatically subtracts the exact SKU/Grade quantity from inventory.</p></div></div>
+      <div class="bill-meta-grid">
+        <label>Customer name<input id="bill-customer" type="text" maxlength="160" placeholder="Customer / company"></label>
+        <label>Customer reference<input id="bill-reference" type="text" maxlength="120" placeholder="PO / reference (optional)"></label>
+        <label class="full">Notes<textarea id="bill-notes" rows="2" maxlength="500" placeholder="Optional internal notes"></textarea></label>
+      </div>
+      <div class="bill-add-row"><select id="bill-product-select"><option value="">Choose SKU / Grade…</option></select><input id="bill-qty" type="number" min="1" step="1" value="1"><button id="bill-add-line" class="btn btn-soft" type="button">Add line</button></div>
+      <div class="bill-lines-wrap"><table class="inventory-table"><thead><tr><th>SKU</th><th>Product</th><th>CAS</th><th>Grade</th><th>Available</th><th>Qty to bill</th><th></th></tr></thead><tbody id="bill-lines-body"></tbody></table></div>
+      <div class="bill-footer"><span id="bill-total-units">0 units</span><button id="save-bill" class="btn btn-primary" type="button">Save bill & remove stock</button></div>
+      <div id="billing-message" class="staff-message" role="status" hidden></div>
+    </div>
+  </section>
+</section>
+</main>
+
+<dialog id="inventory-dialog" class="inventory-dialog">
+  <form method="dialog" id="inventory-form" class="dialog-card">
+    <button type="button" id="dialog-close" class="modal-close" aria-label="Close">×</button>
+    <span class="eyebrow">INVENTORY ITEM</span><h2 id="dialog-title">Add inventory</h2><p id="dialog-subtitle" class="muted"></p>
+    <input id="edit-id" type="hidden"><input id="edit-product-key" type="hidden">
+    <div class="dialog-grid">
+      <label>SKU<input id="edit-sku" type="text" maxlength="80" required placeholder="e.g. ADD-ACE-001"></label>
+      <label>Product name<input id="edit-product-name" type="text" maxlength="240" required></label>
+      <label>CAS No.<input id="edit-cas" type="text" maxlength="80"></label>
+      <label>Grade<input id="edit-grade" type="text" maxlength="120"></label>
+      <label>Quantity on hand<input id="edit-quantity" type="number" min="0" step="1" value="0" required></label>
+      <label>Unit<select id="edit-unit" required></select></label>
+      <label>Batch number<input id="edit-batch" type="text" maxlength="80"></label>
+      <label>Expiry date<input id="edit-expiry" type="date"></label>
+      <label class="full">Reason for correction / note<textarea id="edit-notes" rows="3" maxlength="500" placeholder="Required when correcting an existing quantity"></textarea></label>
+    </div>
+    <div class="dialog-actions"><button id="dialog-cancel" class="btn btn-soft" type="button">Cancel</button><button class="btn btn-primary" type="submit">Save inventory</button></div>
+  </form>
+</dialog>
+<script src="staff.js"></script>
+</body>
+</html>

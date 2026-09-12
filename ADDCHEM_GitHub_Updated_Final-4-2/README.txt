@@ -10,3 +10,6 @@ ADDCHEM website — V6
 - No AI-generated website image asset is included.
 - Real photographs are sourced from Wikimedia Commons.
 - Existing catalogue, map, WhatsApp enquiry, HSN/GST, and hidden phone-number behavior remain.
+
+STAFF INVENTORY
+See STAFF_SETUP.md for the secure Supabase staff-login and private-inventory setup.
