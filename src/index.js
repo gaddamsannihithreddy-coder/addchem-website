@@ -24,7 +24,7 @@ function parseCookies(header=''){
   return out;
 }
 function bytesToB64(bytes){ return btoa(String.fromCharCode(...new Uint8Array(bytes))); }
-function b64ToBytes(str){ return Uint8Array.from(atob(str), c=>c.charCodeAt(0)); }
+function b64ToBytes(str){ const normalized=String(str).replace(/-/g,'+').replace(/_/g,'/').padEnd(Math.ceil(String(str).length/4)*4,'='); return Uint8Array.from(atob(normalized), c=>c.charCodeAt(0)); }
 async function sha256Base64(text){
   const buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
   return bytesToB64(buf);
