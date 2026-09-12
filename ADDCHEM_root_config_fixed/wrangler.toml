@@ -1,9 +1,9 @@
 name = "addchem-website"
-main = "src/index.js"
+main = "ADDCHEM_GitHub_Updated_Final-4/src/index.js"
 compatibility_date = "2026-09-10"
 
 [assets]
-directory = "./public"
+directory = "./ADDCHEM_GitHub_Updated_Final-4"
 binding = "ASSETS"
 run_worker_first = ["/api/*"]
 
