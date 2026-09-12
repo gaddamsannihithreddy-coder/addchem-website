@@ -10,7 +10,7 @@
 <header class="site-header legacy-header">
 <a class="brand" href="index.html"><img src="assets/logo.png" alt="ADDCHEM"></a>
 <button class="nav-toggle" aria-label="Open menu">☰</button>
-<nav class="nav"><a href="index.html">Home</a><a href="catalogue.html">Catalogue</a><a href="index.html#about">About</a><a href="contact.html" class="active">Contact</a></nav>
+<nav class="nav"><a href="index.html">Home</a><a href="catalogue.html">Catalogue</a><a href="index.html#about">About</a><a href="contact.html" class="active">Contact</a><a id="staff-nav-link" href="staff.html">Staff Login</a></nav>
 </header>
 <main class="legacy-section contact-page">
 <div class="legacy-title"><span>CONTACT</span><h1>Let's discuss your requirement.</h1></div>
@@ -27,5 +27,5 @@
 </main>
 <footer class="footer legacy-footer"><div><strong>ADDCHEM</strong><span>ADD CHEMISTRY TO...</span></div><div>Adikmet Main Road, Vidya Nagar, Adikmet, Hyderabad, Telangana 500044</div><div><a href="catalogue.html">Catalogue</a></div><div><a href="staff.html">Staff Login</a></div></footer>
 <script>document.querySelector(".nav-toggle")?.addEventListener("click",()=>document.querySelector(".nav")?.classList.toggle("open"));</script>
-</body>
+<script>fetch('/api/auth/me').then(r=>r.ok?r.json():null).then(d=>{var a=document.getElementById('staff-nav-link');if(a&&d&&d.staff){a.textContent='Staff Dashboard';a.href='staff.html';}}).catch(()=>{});</script></body>
 </html>

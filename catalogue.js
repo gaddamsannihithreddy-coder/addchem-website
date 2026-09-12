@@ -5,7 +5,11 @@ const els={
   result:document.getElementById('result-count'),prev:document.getElementById('prev'),next:document.getElementById('next'),pageInfo:document.getElementById('page-info'),
   modal:document.getElementById('modal'),modalTitle:document.getElementById('modal-title'),modalBody:document.getElementById('modal-body')
 };
-Promise.all([fetch('data/products.json').then(r=>r.json()),fetch('data/summary.json').then(r=>r.json())]).then(([products,summary])=>{
+Promise.all([fetch('data/products.json').then(r=>r.json()),fetch('data/summary.json').then(r=>r.json()),fetch('/api/catalogue/public').then(r=>r.ok?r.json():{items:[]}).catch(()=>({items:[]}))]).then(([products,summary,changes])=>{
+  const overrides=new Map((changes.items||[]).map(x=>[String(x.product_code).toLowerCase(),x]));
+  products=products.map(p=>{const code=String(p['Product Code']||'').toLowerCase(),o=overrides.get(code);return o?{'Section':o.section||p.Section,'Product Name':o.product_name||p['Product Name'],'Chemical Name / Description':o.description||p['Chemical Name / Description'],'CAS Number':o.cas_number||p['CAS Number'],'Grade / Traceability':o.grade||p['Grade / Traceability'],'Product Code':o.product_code||p['Product Code'],'Pack Size':o.pack_size||p['Pack Size'],'HSN Code':o.hsn_code||p['HSN Code'],'GST %':o.gst_percent||p['GST %'],'Other / Notes':o.notes||p['Other / Notes'],'_deleted':!!o.is_deleted}:p}).filter(p=>!p._deleted);
+  const baseCodes=new Set(products.map(p=>String(p['Product Code']||'').toLowerCase()));
+  (changes.items||[]).filter(o=>!o.is_deleted&&!baseCodes.has(String(o.product_code).toLowerCase())).forEach(o=>products.push({'Section':o.section||'Unclassified','Product Name':o.product_name,'Chemical Name / Description':o.description||'','CAS Number':o.cas_number||'','Grade / Traceability':o.grade||'','Product Code':o.product_code,'Pack Size':o.pack_size||'','HSN Code':o.hsn_code||'','GST %':o.gst_percent||'18','Other / Notes':o.notes||''}));
   state.all=products.map((p,i)=>({...p,_i:i}));
   const sections=[...new Set(products.map(p=>p.Section).filter(Boolean))].sort();
   const grades=[...new Set(products.map(p=>p['Grade / Traceability']).filter(Boolean))].sort();

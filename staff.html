@@ -1,130 +1,20 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>ADDCHEM | Staff Portal</title>
-<link rel="icon" href="assets/logo-transparent.png">
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="staff.css">
-</head>
-<body class="staff-page">
-<header class="site-header staff-header">
-  <a class="brand" href="index.html" aria-label="ADDCHEM home"><img src="assets/logo-transparent.png" alt="ADDCHEM"></a>
-  <nav class="nav staff-nav" aria-label="Staff navigation">
-    <a href="index.html">Public Website</a>
-    <a href="catalogue.html">Catalogue</a>
-    <span class="nav-divider" aria-hidden="true"></span>
-    <span id="nav-staff-state" class="nav-staff-state" hidden>Staff Portal</span>
-    <button id="logout-top" class="staff-link" hidden>Log out</button>
-  </nav>
-</header>
-
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>ADDCHEM | Staff</title><link rel="icon" href="assets/logo.png"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="staff.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script></head><body class="staff-page">
+<header class="site-header staff-header"><a class="brand" href="index.html"><img src="assets/logo.png" alt="ADDCHEM"></a><nav class="nav staff-nav"><a href="index.html">Public Website</a><a href="catalogue.html">Catalogue</a><button id="logout-top" class="staff-link" hidden>Log out</button></nav></header>
 <main class="staff-shell">
-<section id="login-view" class="login-stage">
-  <div class="login-visual" aria-hidden="true">
-    <div class="orb orb-one"></div><div class="orb orb-two"></div>
-    <div class="molecule molecule-one"><i></i><i></i><i></i><i></i></div>
-    <div class="molecule molecule-two"><i></i><i></i><i></i></div>
-    <div class="chem-ring ring-one"></div><div class="chem-ring ring-two"></div>
-    <div class="flask-mark"><span></span></div>
-  </div>
-  <div class="login-copy">
-    <span class="eyebrow">ADDCHEM ENTERPRISES</span>
-    <h1>Operations,<br><span>under control.</span></h1>
-    <p>One secure workspace for inventory, stock movements and internal billing.</p>
-    <div class="login-benefits">
-      <div><b>Inventory</b><span>Track stock by SKU, grade and batch.</span></div>
-      <div><b>Billing</b><span>Create bills and automatically deduct stock.</span></div>
-      <div><b>Private access</b><span>Only authenticated staff can enter.</span></div>
-    </div>
-  </div>
-  <section class="auth-card" aria-labelledby="login-title">
-    <div class="auth-brand"><img src="assets/logo-transparent.png" alt="ADDCHEM Enterprises"></div>
-    <span class="eyebrow">PRIVATE STAFF PORTAL</span>
-    <h2 id="login-title">Welcome back</h2>
-    <p class="auth-subtitle">Sign in to manage inventory and billing.</p>
-    <form id="login-form" class="staff-form">
-      <label>Email<input id="email" type="email" autocomplete="username" required placeholder="staff@addchem.com"></label>
-      <label>Password<div class="password-wrap"><input id="password" type="password" autocomplete="current-password" required placeholder="Enter your password"><button id="toggle-password" type="button" aria-label="Show password">Show</button></div></label>
-      <button class="btn btn-primary auth-submit" type="submit"><span>Sign in securely</span><b>→</b></button>
-    </form>
-    <div id="login-message" class="staff-message" role="alert" hidden></div>
-    <div class="auth-footer"><span>Protected staff access</span><span>ADDCHEM</span></div>
-  </section>
+<section id="login-view" class="auth-card"><div class="login-accent"><span></span><span></span><span></span></div><span class="eyebrow">STAFF ACCESS</span><h1>Sign in to ADDCHEM</h1><p class="muted">Secure access to inventory, billing and customers.</p><form id="login-form" class="staff-form"><label>Email<input id="email" type="email" autocomplete="username" required placeholder="staff@addchem.com"></label><label>Password<input id="password" type="password" autocomplete="current-password" required placeholder="Enter password"></label><button class="btn btn-primary" type="submit">Sign in <span>→</span></button></form><div id="login-message" class="staff-message" role="alert" hidden></div></section>
+<section id="dashboard-view" hidden><div class="staff-headline"><div><span class="eyebrow">ADDCHEM STAFF</span><h1>Operations</h1><p class="muted">Inventory, invoices and customer records in one workspace.</p></div><div class="staff-userbox"><span id="staff-email">—</span><button id="logout" class="btn btn-soft" type="button">Log out</button></div></div>
+<div class="staff-tabs" role="tablist"><button class="staff-tab active" data-tab="dashboard" type="button">Overview</button><button class="staff-tab" data-tab="inventory" type="button">Inventory</button><button class="staff-tab" data-tab="billing" type="button">Create Bill</button><button class="staff-tab" data-tab="customers" type="button">Customers</button><button class="staff-tab" data-tab="settings" type="button">Settings</button></div>
+<section id="tab-dashboard" class="tab-panel"><div class="dashboard-cards"><article class="metric-card"><span>Inventory SKUs</span><strong id="metric-skus">0</strong></article><article class="metric-card"><span>Units on hand</span><strong id="metric-total">0</strong></article><article class="metric-card"><span>Customers</span><strong id="metric-customers">0</strong></article></div><div class="panel-card"><div class="panel-head"><div><span class="eyebrow">RECENT INVOICES</span><h2>Latest bills</h2></div><button id="refresh-bills" class="btn btn-soft">Refresh</button></div><div class="recent-bills-wrap"><table class="inventory-table"><thead><tr><th>Invoice</th><th>Customer</th><th>Total</th><th>Date</th></tr></thead><tbody id="recent-bills-body"></tbody></table></div></div></section>
+<section id="tab-inventory" class="tab-panel" hidden><div class="inventory-tools"><label class="search-wrap"><span>Find inventory</span><input id="inventory-search" type="search" placeholder="SKU, product, CAS or grade…"></label><button id="refresh-inventory" class="btn btn-soft" type="button">Refresh</button><button id="new-inventory" class="btn btn-primary" type="button">+ Add inventory</button></div><div id="inventory-message" class="staff-message" hidden></div><div class="inventory-table-wrap"><table class="inventory-table"><thead><tr><th>SKU</th><th>Product</th><th>CAS</th><th>Grade</th><th>Qty</th><th>Unit</th><th>Batch</th><th>Expiry</th><th></th></tr></thead><tbody id="inventory-table-body"></tbody></table></div><div id="inventory-empty" class="inventory-empty" hidden>No inventory items yet.</div></section>
+<section id="tab-billing" class="tab-panel" hidden><div class="billing-layout"><div class="panel-card billing-editor"><div class="panel-head"><div><span class="eyebrow">TAX INVOICE</span><h2>Create bill</h2></div><div class="bill-actions"><button id="preview-bill" class="btn btn-soft">Preview</button><button id="download-pdf" class="btn btn-primary">Download PDF</button></div></div><div id="billing-message" class="staff-message" hidden></div>
+<div class="bill-section"><h3>Invoice details</h3><div class="bill-meta-grid"><label>Invoice No.<input id="bill-invoice" type="text" placeholder="INV/26-27/0485"></label><label>Invoice Date<input id="bill-date" type="date"></label><label>Terms<input id="bill-terms" value="Net 60"></label><label>Due Date<input id="bill-due" type="date"></label><label>P.O.#<input id="bill-po" placeholder="PO number"></label><label>Place of Supply<input id="bill-place" placeholder="Telangana (36)"></label></div></div>
+<div class="bill-section"><div class="section-title-row"><h3>Customer</h3><button id="add-customer-inline" class="link-button" type="button">+ Add customer</button></div><div class="customer-select-grid"><label>Bill To<select id="bill-customer-select"><option value="">Select customer…</option></select></label><label>Ship To<select id="bill-ship-select"><option value="">Same as Bill To</option></select></label></div><div id="selected-customer-card" class="selected-customer-card" hidden></div></div>
+<div class="bill-section"><h3>Items</h3><div class="bill-add-row"><select id="bill-product-select"><option value="">Choose inventory item…</option></select><input id="bill-qty" type="number" min="1" step="1" value="1" placeholder="Qty"><input id="bill-rate" type="number" min="0" step="0.01" placeholder="Rate"><button id="bill-add-line" class="btn btn-soft" type="button">Add item</button></div><div class="bill-lines-wrap"><table class="inventory-table bill-table"><thead><tr><th>#</th><th>Item & Description</th><th>HSN/SAC</th><th>Qty</th><th>Rate</th><th>CGST 9%</th><th>SGST 9%</th><th>Amount</th><th></th></tr></thead><tbody id="bill-lines-body"></tbody></table></div></div>
+<div class="bill-bottom-grid"><label>Notes<textarea id="bill-notes" rows="4" placeholder="Thanks for your business."></textarea></label><div class="totals-box"><div><span>Sub Total</span><strong id="bill-subtotal">₹0.00</strong></div><div><span>CGST9 (9%)</span><strong id="bill-cgst">₹0.00</strong></div><div><span>SGST9 (9%)</span><strong id="bill-sgst">₹0.00</strong></div><div class="grand"><span>Total</span><strong id="bill-grand">₹0.00</strong></div><div><span>Balance Due</span><strong id="bill-balance">₹0.00</strong></div></div></div><div class="save-row"><span id="bill-total-units">0 units</span><button id="save-bill" class="btn btn-primary" type="button">Save Bill & Deduct Stock</button></div></div>
+<div class="invoice-preview-wrap"><div class="preview-toolbar"><span>LIVE PREVIEW</span><button id="close-preview" class="btn btn-soft" type="button">Hide</button></div><div id="invoice-preview" class="invoice-paper"></div></div></div></section>
+<section id="tab-customers" class="tab-panel" hidden><div class="panel-card"><div class="panel-head"><div><span class="eyebrow">CUSTOMER DIRECTORY</span><h2>Customers</h2></div><button id="new-customer" class="btn btn-primary">+ Add customer</button></div><div id="customer-message" class="staff-message" hidden></div><div class="customer-table-wrap"><table class="inventory-table"><thead><tr><th>Company</th><th>Contact</th><th>Address</th><th>GSTIN</th><th></th></tr></thead><tbody id="customers-body"></tbody></table></div><div id="customers-empty" class="inventory-empty" hidden>No customers added yet.</div></div></section><section id="tab-settings" class="tab-panel" hidden><div class="settings-grid"><div class="panel-card"><div class="panel-head"><div><span class="eyebrow">CATALOGUE CONTROL</span><h2>Modify Catalogue</h2><p class="muted">Edit public catalogue information from the staff portal. Changes are saved to the database and applied to the public catalogue.</p></div><button id="new-catalogue" class="btn btn-primary" type="button">+ Add product</button></div><div class="inventory-tools catalogue-tools"><label class="search-wrap"><span>Find catalogue product</span><input id="catalogue-search" type="search" placeholder="Name, product code, CAS, HSN or grade…"></label><button id="refresh-catalogue" class="btn btn-soft" type="button">Refresh</button></div><div id="catalogue-message" class="staff-message" hidden></div><div class="inventory-table-wrap"><table class="inventory-table"><thead><tr><th>Product Code</th><th>Product</th><th>CAS</th><th>Grade</th><th>Pack</th><th>HSN</th><th>GST</th><th>Status</th><th></th></tr></thead><tbody id="catalogue-body"></tbody></table></div><div id="catalogue-empty" class="inventory-empty" hidden>No catalogue changes yet. Existing catalogue products can be edited by searching them in the editor.</div></div></div></section>
 </section>
-
-<section id="dashboard-view" hidden>
-  <div class="staff-headline">
-    <div><span class="eyebrow">PRIVATE STAFF DASHBOARD</span><h1>Inventory & Billing</h1><p class="muted">Manage stock by SKU and grade. Billing automatically removes the billed quantity from inventory.</p></div>
-    <div class="staff-userbox"><span class="avatar" id="staff-avatar">S</span><div><small>Signed in as</small><strong id="staff-email">—</strong></div><button id="logout" class="btn btn-soft" type="button">Log out</button></div>
-  </div>
-
-  <div class="staff-tabs" role="tablist">
-    <button class="staff-tab active" data-tab="dashboard" type="button">Overview</button>
-    <button class="staff-tab" data-tab="inventory" type="button">Inventory</button>
-    <button class="staff-tab" data-tab="billing" type="button">Billing</button>
-  </div>
-
-  <section id="tab-dashboard" class="tab-panel">
-    <div class="dashboard-cards">
-      <article class="metric-card"><span>Inventory SKUs</span><strong id="metric-skus">0</strong><small>Active stock lines</small></article>
-      <article class="metric-card"><span>Total units on hand</span><strong id="metric-total">0</strong><small>Across all inventory units</small></article>
-      <article class="metric-card"><span>Different grades</span><strong id="metric-grades">0</strong><small>Distinct grade entries</small></article>
-    </div>
-    <div class="panel-card"><div class="panel-head"><div><span class="eyebrow">STOCK BY UNIT</span><h2>Inventory summary</h2></div><button id="refresh-dashboard" class="btn btn-soft">Refresh</button></div><div id="unit-summary" class="unit-summary"></div></div>
-    <div class="panel-card"><div class="panel-head"><div><span class="eyebrow">RECENT BILLING</span><h2>Latest bills</h2></div><button id="refresh-bills" class="btn btn-soft">Refresh</button></div><div class="recent-bills-wrap"><table class="inventory-table"><thead><tr><th>Invoice</th><th>Customer</th><th>Units</th><th>Staff</th><th>Date</th></tr></thead><tbody id="recent-bills-body"></tbody></table></div></div>
-  </section>
-
-  <section id="tab-inventory" class="tab-panel" hidden>
-    <div class="inventory-tools">
-      <label class="search-wrap"><span>Find inventory</span><input id="inventory-search" type="search" placeholder="SKU, product, CAS or grade…"></label>
-      <button id="refresh-inventory" class="btn btn-soft" type="button">Refresh</button>
-      <button id="new-inventory" class="btn btn-primary" type="button">+ Add inventory item</button>
-    </div>
-    <div id="inventory-message" class="staff-message" role="status" hidden></div>
-    <div class="inventory-summary"><span id="inventory-count">0 items</span><span>Inventory is visible only to authenticated staff.</span></div>
-    <div class="inventory-table-wrap"><table class="inventory-table"><thead><tr><th>SKU</th><th>Product</th><th>CAS</th><th>Grade</th><th>Qty</th><th>Unit</th><th>Batch</th><th>Expiry</th><th></th></tr></thead><tbody id="inventory-table-body"></tbody></table></div>
-    <div id="inventory-empty" class="inventory-empty" hidden>No inventory items yet.</div>
-    <section class="product-picker"><div class="picker-head"><div><span class="eyebrow">CATALOGUE</span><h2>Choose a catalogue product</h2><p class="muted">A product can have multiple grades. Each inventory line gets its own unique SKU.</p></div></div><div class="picker-row"><input id="product-picker-search" type="search" placeholder="Search by product, CAS, code or grade…"><span id="picker-count"></span></div><div id="product-picker" class="picker-grid"></div></section>
-  </section>
-
-  <section id="tab-billing" class="tab-panel" hidden>
-    <div class="panel-card billing-card">
-      <div class="panel-head"><div><span class="eyebrow">INTERNAL BILLING</span><h2>Create a bill</h2><p class="muted">Adding a bill atomically deducts the exact SKU/Grade quantity from inventory.</p></div></div>
-      <div class="bill-meta-grid">
-        <label>Customer name<input id="bill-customer" type="text" maxlength="160" placeholder="Customer / company"></label>
-        <label>Customer reference<input id="bill-reference" type="text" maxlength="120" placeholder="PO / reference (optional)"></label>
-        <label class="full">Notes<textarea id="bill-notes" rows="2" maxlength="500" placeholder="Optional internal notes"></textarea></label>
-      </div>
-      <div class="bill-add-row"><select id="bill-product-select"><option value="">Choose SKU / Grade…</option></select><input id="bill-qty" type="number" min="1" step="1" value="1"><button id="bill-add-line" class="btn btn-soft" type="button">Add line</button></div>
-      <div class="bill-lines-wrap"><table class="inventory-table"><thead><tr><th>SKU</th><th>Product</th><th>CAS</th><th>Grade</th><th>Available</th><th>Qty to bill</th><th></th></tr></thead><tbody id="bill-lines-body"></tbody></table></div>
-      <div class="bill-footer"><span id="bill-total-units">0 units</span><button id="save-bill" class="btn btn-primary" type="button">Save bill & remove stock</button></div>
-      <div id="billing-message" class="staff-message" role="status" hidden></div>
-    </div>
-  </section>
-</section>
-</main>
-
-<dialog id="inventory-dialog" class="inventory-dialog">
-  <form method="dialog" id="inventory-form" class="dialog-card">
-    <button type="button" id="dialog-close" class="modal-close" aria-label="Close">×</button>
-    <span class="eyebrow">INVENTORY ITEM</span><h2 id="dialog-title">Add inventory</h2><p id="dialog-subtitle" class="muted"></p>
-    <input id="edit-id" type="hidden"><input id="edit-product-key" type="hidden">
-    <div class="dialog-grid">
-      <label>SKU<input id="edit-sku" type="text" maxlength="80" required placeholder="e.g. ADD-ACE-001"></label>
-      <label>Product name<input id="edit-product-name" type="text" maxlength="240" required></label>
-      <label>CAS No.<input id="edit-cas" type="text" maxlength="80"></label>
-      <label>Grade<input id="edit-grade" type="text" maxlength="120"></label>
-      <label>Quantity on hand<input id="edit-quantity" type="number" min="0" step="1" value="0" required></label>
-      <label>Unit<select id="edit-unit" required></select></label>
-      <label>Batch number<input id="edit-batch" type="text" maxlength="80"></label>
-      <label>Expiry date<input id="edit-expiry" type="date"></label>
-      <label class="full">Reason for correction / note<textarea id="edit-notes" rows="3" maxlength="500" placeholder="Required when correcting an existing quantity"></textarea></label>
-    </div>
-    <div class="dialog-actions"><button id="dialog-cancel" class="btn btn-soft" type="button">Cancel</button><button class="btn btn-primary" type="submit">Save inventory</button></div>
-  </form>
-</dialog>
-<script src="staff.js"></script>
-</body>
-</html>
+</section></main>
+<dialog id="inventory-dialog" class="inventory-dialog"><form method="dialog" id="inventory-form" class="dialog-card"><button type="button" id="dialog-close" class="modal-close">×</button><span class="eyebrow">INVENTORY ITEM</span><h2 id="dialog-title">Add inventory</h2><div class="dialog-grid"><input id="edit-id" type="hidden"><input id="edit-product-key" type="hidden"><label>SKU<input id="edit-sku" maxlength="80" required></label><label>Product name<input id="edit-product-name" maxlength="240" required></label><label>CAS No.<input id="edit-cas" maxlength="80"></label><label>HSN/SAC<input id="edit-hsn" maxlength="30"></label><label>Grade<input id="edit-grade" maxlength="120"></label><label>Quantity<input id="edit-quantity" type="number" min="0" step="1" value="0" required></label><label>Unit<select id="edit-unit" required></select></label><label>Batch number<input id="edit-batch" maxlength="80"></label><label>Expiry date<input id="edit-expiry" type="date"></label><label class="full">Note<textarea id="edit-notes" rows="3"></textarea></label></div><div class="dialog-actions"><button id="dialog-cancel" class="btn btn-soft" type="button">Cancel</button><button class="btn btn-primary" type="submit">Save inventory</button></div></form></dialog>
+<dialog id="catalogue-dialog" class="inventory-dialog"><form method="dialog" id="catalogue-form" class="dialog-card"><button type="button" id="catalogue-close" class="modal-close">×</button><span class="eyebrow">PUBLIC CATALOGUE</span><h2 id="catalogue-title">Add catalogue product</h2><div class="dialog-grid"><label>Product Code<input id="cat-code" maxlength="100"></label><label>Section<input id="cat-section" maxlength="160"></label><label class="full">Product Name<input id="cat-name" required maxlength="240"></label><label class="full">Chemical Name / Description<input id="cat-description" maxlength="500"></label><label>CAS Number<input id="cat-cas" maxlength="80"></label><label>Grade / Traceability<input id="cat-grade" maxlength="160"></label><label>Pack Size<input id="cat-pack" maxlength="100"></label><label>HSN Code<input id="cat-hsn" maxlength="40"></label><label>GST %<input id="cat-gst" type="number" min="0" max="100" step="0.01" value="18"></label><label class="full">Other / Notes<textarea id="cat-notes" rows="3"></textarea></label></div><div class="dialog-actions"><button id="catalogue-cancel" class="btn btn-soft" type="button">Cancel</button><button id="catalogue-delete" class="btn btn-soft danger-btn" type="button" hidden>Remove from public catalogue</button><button class="btn btn-primary" type="submit">Save catalogue</button></div></form></dialog><dialog id="customer-dialog" class="inventory-dialog"><form method="dialog" id="customer-form" class="dialog-card"><button type="button" id="customer-close" class="modal-close">×</button><span class="eyebrow">CUSTOMER</span><h2 id="customer-title">Add customer</h2><div class="dialog-grid"><input id="customer-id" type="hidden"><label>Company name<input id="customer-name" required maxlength="180"></label><label>Contact person<input id="customer-contact" maxlength="120"></label><label>GSTIN<input id="customer-gstin" maxlength="30"></label><label>Phone<input id="customer-phone" maxlength="30"></label><label class="full">Address<input id="customer-address" maxlength="300"></label><label>City<input id="customer-city" maxlength="80"></label><label>State<input id="customer-state" maxlength="80"></label><label>PIN<input id="customer-pin" maxlength="12"></label><label class="full">Notes<textarea id="customer-notes" rows="3"></textarea></label></div><div class="dialog-actions"><button id="customer-cancel" class="btn btn-soft" type="button">Cancel</button><button class="btn btn-primary" type="submit">Save customer</button></div></form></dialog>
+<script src="staff.js"></script></body></html>

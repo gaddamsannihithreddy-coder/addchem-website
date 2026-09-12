@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS customers (id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL UNIQUE COLLATE NOCASE,contact_name TEXT,gstin TEXT,phone TEXT,address TEXT,city TEXT,state TEXT,pin TEXT,notes TEXT,created_at TEXT NOT NULL DEFAULT (datetime('now')),updated_at TEXT NOT NULL DEFAULT (datetime('now')));
+ALTER TABLE inventory_items ADD COLUMN hsn_code TEXT;
+ALTER TABLE bills ADD COLUMN invoice_date TEXT;
+ALTER TABLE bills ADD COLUMN terms TEXT;
+ALTER TABLE bills ADD COLUMN due_date TEXT;
+ALTER TABLE bills ADD COLUMN po_number TEXT;
+ALTER TABLE bills ADD COLUMN place_of_supply TEXT;
+ALTER TABLE bills ADD COLUMN customer_id INTEGER REFERENCES customers(id);
+ALTER TABLE bills ADD COLUMN ship_customer_id INTEGER REFERENCES customers(id);
+ALTER TABLE bills ADD COLUMN subtotal REAL NOT NULL DEFAULT 0;
+ALTER TABLE bills ADD COLUMN cgst REAL NOT NULL DEFAULT 0;
+ALTER TABLE bills ADD COLUMN sgst REAL NOT NULL DEFAULT 0;
+ALTER TABLE bills ADD COLUMN total_amount REAL NOT NULL DEFAULT 0;
+ALTER TABLE bill_items ADD COLUMN hsn_code TEXT;
+ALTER TABLE bill_items ADD COLUMN rate REAL NOT NULL DEFAULT 0;
+ALTER TABLE bill_items ADD COLUMN cgst_amount REAL NOT NULL DEFAULT 0;
+ALTER TABLE bill_items ADD COLUMN sgst_amount REAL NOT NULL DEFAULT 0;
+ALTER TABLE bill_items ADD COLUMN amount REAL NOT NULL DEFAULT 0;
+
+INSERT OR IGNORE INTO customers(name,contact_name,gstin,address,city,state,pin) VALUES('PHARMAFFILIATES PRIVATE LIMITED','Pharmaffiliates Pvt. Ltd.','36AAECP2191E4ZH','Second Floor, Plot No. 81, IDA Mallapur','Hyderabad','Telangana','500076');

@@ -15,7 +15,7 @@
 <header class="site-header legacy-header">
   <a class="brand" href="index.html"><img src="assets/logo.png" alt="ADDCHEM"></a>
   <button class="nav-toggle" aria-label="Open menu">☰</button>
-  <nav class="nav"><a href="index.html" class="active">Home</a><a href="catalogue.html">Catalogue</a><a href="#about">About</a><a href="contact.html">Contact</a><a class="staff-nav-cta" id="public-staff-link" href="staff.html">Staff Login</a></nav>
+  <nav class="nav"><a href="index.html" class="active">Home</a><a href="catalogue.html">Catalogue</a><a href="#about">About</a><a href="contact.html">Contact</a><a id="staff-nav-link" href="staff.html">Staff Login</a></nav>
 </header>
 
 <main>
@@ -90,10 +90,12 @@
 <div><a href="staff.html">Staff Login</a></div></footer>
 
 <script>
-fetch('data/products.json').then(function(r){
-  if(!r.ok) throw new Error('Catalogue data could not be loaded');
-  return r.json();
-}).then(function(products){
+Promise.all([fetch('data/products.json').then(function(r){if(!r.ok) throw new Error('Catalogue data could not be loaded'); return r.json();}),fetch('/api/catalogue/public').then(function(r){return r.ok?r.json():{items:[]};}).catch(function(){return {items:[]};})]).then(function(result){
+  var products=result[0], changes=result[1], overrides={};
+  (changes.items||[]).forEach(function(o){overrides[String(o.product_code).toLowerCase()]=o;});
+  products=products.map(function(p){var o=overrides[String(p['Product Code']||'').toLowerCase()]; if(!o) return p; if(o.is_deleted) return null; return Object.assign({},p,{'Section':o.section||p.Section,'Product Name':o.product_name||p['Product Name'],'Chemical Name / Description':o.description||p['Chemical Name / Description'],'CAS Number':o.cas_number||p['CAS Number'],'Grade / Traceability':o.grade||p['Grade / Traceability'],'Pack Size':o.pack_size||p['Pack Size'],'HSN Code':o.hsn_code||p['HSN Code'],'GST %':o.gst_percent||p['GST %'],'Other / Notes':o.notes||p['Other / Notes']});}).filter(Boolean);
+  var baseCodes={}; products.forEach(function(p){baseCodes[String(p['Product Code']||'').toLowerCase()]=true;}); (changes.items||[]).filter(function(o){return !o.is_deleted&&!baseCodes[String(o.product_code).toLowerCase()];}).forEach(function(o){products.push({'Section':o.section||'Unclassified','Product Name':o.product_name,'Chemical Name / Description':o.description||'','CAS Number':o.cas_number||'','Grade / Traceability':o.grade||'','Product Code':o.product_code,'Pack Size':o.pack_size||'','HSN Code':o.hsn_code||'','GST %':o.gst_percent||'18','Other / Notes':o.notes||''});});
+
   var productCount=document.getElementById('product-count');
   var sectionCount=document.getElementById('section-count');
   var cardHost=document.getElementById('section-cards');
@@ -291,7 +293,6 @@ document.getElementById('home-search')?.addEventListener('submit',e=>{
   }
   requestAnimationFrame(frame);
 })();
-  fetch('/api/auth/me',{credentials:'same-origin'}).then(function(r){return r.ok?r.json():null}).then(function(d){var a=document.getElementById('public-staff-link');if(a&&d&&d.staff){a.textContent='Staff Dashboard';a.href='staff.html';a.classList.add('is-signed-in');}}).catch(function(){});
 </script>
-</body>
+<script>fetch('/api/auth/me').then(r=>r.ok?r.json():null).then(d=>{var a=document.getElementById('staff-nav-link');if(a&&d&&d.staff){a.textContent='Staff Dashboard';a.href='staff.html';}}).catch(()=>{});</script></body>
 </html>

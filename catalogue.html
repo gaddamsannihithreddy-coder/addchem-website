@@ -10,7 +10,7 @@
 <header class="site-header">
   <a class="brand" href="index.html"><img src="assets/logo.png" alt="ADDCHEM"></a>
   <button class="nav-toggle" aria-label="Open menu">☰</button>
-  <nav class="nav"><a href="index.html">Home</a><a href="catalogue.html" class="active">Catalogue</a><a href="index.html#about">About</a><a href="contact.html">Contact</a></nav>
+  <nav class="nav"><a href="index.html">Home</a><a href="catalogue.html" class="active">Catalogue</a><a href="index.html#about">About</a><a href="contact.html">Contact</a><a id="staff-nav-link" href="staff.html">Staff Login</a></nav>
 </header>
 
 <main class="catalogue-main">
@@ -48,5 +48,5 @@
 
 <footer class="footer"><div><strong>ADDCHEM</strong><span>ADD CHEMISTRY TO...</span></div><div>Adikmet Main Road, Vidya Nagar, Adikmet, Hyderabad, Telangana 500044</div><div><a href="contact.html">Contact & map</a></div><div><a href="staff.html">Staff Login</a></div></footer>
 <script src="catalogue.js"></script>
-<script>document.querySelector(".nav-toggle")?.addEventListener("click",()=>document.querySelector(".nav")?.classList.toggle("open"));</script></body>
+<script>document.querySelector(".nav-toggle")?.addEventListener("click",()=>document.querySelector(".nav")?.classList.toggle("open"));</script><script>fetch('/api/auth/me').then(r=>r.ok?r.json():null).then(d=>{var a=document.getElementById('staff-nav-link');if(a&&d&&d.staff){a.textContent='Staff Dashboard';a.href='staff.html';}}).catch(()=>{});</script></body>
 </html>
